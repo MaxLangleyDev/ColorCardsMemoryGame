@@ -2,6 +2,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -37,7 +38,9 @@ fun App() {
     }
 }
 @Composable
-fun CardFlip() {
+fun CardFlip(
+    modifier: Modifier = Modifier,
+) {
     val density = LocalDensity.current.density
     var isFlipped by remember { mutableStateOf(false) }
 
@@ -49,7 +52,10 @@ fun CardFlip() {
     Box(
         modifier = Modifier
             .size(200.dp)
-            .clickable { isFlipped = !isFlipped },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { isFlipped = !isFlipped },
         contentAlignment = Alignment.Center
     ) {
         if (rotationY <= 90f) {
@@ -94,51 +100,3 @@ fun BackSide(rotationY: Float, density: Float) {
         // Add your back side content here
     }
 }
-
-//@Composable
-//fun CardFlip() {
-//    var isFlipped by remember { mutableStateOf(false) }
-//
-//    val rotation by animateFloatAsState(
-//        targetValue = if (isFlipped) 180f else 0f
-//    )
-//
-//    Box(
-//        modifier = Modifier
-//            .size(200.dp)
-//            .clickable { isFlipped = !isFlipped },
-//        contentAlignment = Alignment.Center
-//    ) {
-//        if (rotation <= 90f) {
-//            FrontSide(rotation)
-//        } else {
-//            BackSide(rotation - 180f)
-//        }
-//    }
-//}
-//
-//@Composable
-//fun FrontSide(rotation: Float) {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .rotate(rotation)
-//            .background(Color.Red),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(text = "FRONT")
-//    }
-//}
-//
-//@Composable
-//fun BackSide(rotation: Float) {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .rotate(rotation)
-//            .background(Color.Gray),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(text = "Back")
-//    }
-//}
