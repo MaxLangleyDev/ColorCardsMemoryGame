@@ -5,5 +5,6 @@ data class GameState(
     val points: Int = 0,
 
     val gameStarted: Boolean = false,
+    val cardsSelectable: Boolean = false,
 
 )
