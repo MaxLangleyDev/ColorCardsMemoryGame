@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CardFlippable(
     modifier: Modifier = Modifier,
-    state: CardState = CardState(),
+    state: GameCard = GameCard(),
     onFlipped: () -> Unit
 ) {
     val density = LocalDensity.current.density
