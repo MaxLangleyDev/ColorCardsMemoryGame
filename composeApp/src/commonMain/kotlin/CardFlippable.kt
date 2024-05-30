@@ -6,6 +6,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -20,13 +23,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CardFlippable(
     modifier: Modifier = Modifier,
-    state: GameCard = GameCard(),
+    card: GameCard = GameCard(),
     onFlipped: () -> Unit
 ) {
     val density = LocalDensity.current.density
 
     val rotationY by animateFloatAsState(
-        targetValue = if (state.isFlipped) 180f else 0f,
+        targetValue = if (card.isFlipped) 180f else 0f,
         animationSpec = tween(durationMillis = 600)
     )
 
@@ -41,7 +44,7 @@ fun CardFlippable(
         contentAlignment = Alignment.Center
     ) {
         if (rotationY <= 90f) {
-            FrontSide(rotationY, density)
+            FrontSide(card = card, rotationY = rotationY, density = density)
         } else {
             BackSide(rotationY, density)
         }
@@ -49,7 +52,11 @@ fun CardFlippable(
 }
 
 @Composable
-fun FrontSide(rotationY: Float, density: Float) {
+fun FrontSide(
+    card: GameCard,
+    rotationY: Float,
+    density: Float
+) {
     Box(
         modifier = Modifier
             .size(200.dp)
@@ -57,7 +64,7 @@ fun FrontSide(rotationY: Float, density: Float) {
                 rotationY = rotationY,
                 cameraDistance = 8 * density
             )
-            .background(Color.Red)
+            .background(card.color)
             .alpha(if (rotationY <= 90f) 1f else 0f),
         contentAlignment = Alignment.Center
     ) {
@@ -75,10 +82,14 @@ fun BackSide(rotationY: Float, density: Float) {
                 rotationY = rotationY - 180f,
                 cameraDistance = 8 * density
             )
-            .background(Color.Blue)
+            .background(Color.Gray)
             .alpha(if (rotationY > 90f) 1f else 0f),
         contentAlignment = Alignment.Center
     ) {
-        // Add your back side content here
+        Icon(
+            imageVector = Icons.Default.Star,
+            contentDescription = "Star Icon",
+            tint = Color.White
+        )
     }
 }
