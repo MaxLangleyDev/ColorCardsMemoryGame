@@ -1,12 +1,17 @@
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -17,52 +22,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     MaterialTheme {
 
-        val viewModel = viewModel { GameViewModel(
-            initialGameState = GameState(
-                cards = listOf(
-                    GameCard(
-                        cardNumber = 1,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 2,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 3,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 4,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 5,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 6,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 7,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 8,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 9,
-                        isFlipped = false
-                    ),
-                    GameCard(
-                        cardNumber = 10,
-                        isFlipped = false
-                    ),
-                )
-            )
-        ) }
+        val viewModel = viewModel { GameViewModel() }
+
         val gameState = viewModel.gameState.collectAsState()
 
         Surface(
@@ -70,11 +31,38 @@ fun App() {
             color = MaterialTheme.colors.background
         ) {
             
-            CardGrid(
-                cards = gameState.value.cards,
-                onCardFlipped = viewModel::flipCard
-            )
+            if (gameState.value.gameStarted){
+                CardGrid(
+                    cards = gameState.value.cards,
+                    onCardFlipped = viewModel::flipCard
+                )
+            }
+            else {
 
+                StartScreen(startEvent = viewModel::startGame)
+
+            }
+
+        }
+
+    }
+}
+
+@Composable
+fun StartScreen(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    startEvent: (amountOfCards: Int) -> Unit = {}
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Button(
+            onClick = { startEvent(10) },
+        ){
+            Text(text = "Start")
         }
 
     }
@@ -91,7 +79,7 @@ fun CardGrid(
     ) {
         itemsIndexed(cards) { index, card ->
             CardFlippable(
-                state = card,
+                card = card,
                 onFlipped = {
                     onCardFlipped(index)
                 }
