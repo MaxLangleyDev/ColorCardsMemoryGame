@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,16 +25,16 @@ fun App() {
 
         val viewModel = viewModel { GameViewModel() }
 
-        val gameState = viewModel.gameState.collectAsState()
+        val gameState by viewModel.gameState.collectAsState()
 
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
             
-            if (gameState.value.gameStarted){
+            if (gameState.gameStarted){
                 CardGrid(
-                    cards = gameState.value.cards,
+                    gameState = gameState,
                     onCardFlipped = viewModel::flipCard
                 )
             }
@@ -71,17 +72,20 @@ fun StartScreen(
 @Composable
 fun CardGrid(
     modifier: Modifier = Modifier,
-    cards: List<GameCard> = listOf(),
+    gameState: GameState = GameState(),
+//    cards: List<GameCard> = listOf(),
     onCardFlipped: (index: Int) -> Unit = {}
 ){
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
     ) {
-        itemsIndexed(cards) { index, card ->
+        itemsIndexed(gameState.cards) { index, card ->
             CardFlippable(
                 card = card,
                 onFlipped = {
-                    onCardFlipped(index)
+                    if (gameState.cardsSelectable){
+                        onCardFlipped(index)
+                    }
                 }
 
             )
