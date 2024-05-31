@@ -63,7 +63,7 @@ fun StartScreen(
         Button(
             onClick = { startEvent(10) },
         ){
-            Text(text = "Start")
+            Text(text = "Start Game")
         }
 
     }
@@ -77,6 +77,7 @@ fun CardGrid(
     onCardFlipped: (index: Int) -> Unit = {}
 ){
     LazyVerticalGrid(
+        modifier = modifier,
         columns = GridCells.Fixed(2),
     ) {
         itemsIndexed(gameState.cards) { index, card ->
