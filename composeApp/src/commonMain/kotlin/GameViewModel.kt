@@ -57,7 +57,7 @@ class GameViewModel(
 
     }
 
-    fun startGame(
+    fun setupGame(
         amountOfCards: Int,
     ) {
         val cards = mutableListOf<GameCard>()
@@ -82,6 +82,13 @@ class GameViewModel(
         _gameState.update { gameState ->
             gameState.copy(
                 cards = cards,
+            )
+        }
+    }
+
+    fun startGame() {
+        _gameState.update { gameState ->
+            gameState.copy(
                 gameStarted = true
             )
         }
