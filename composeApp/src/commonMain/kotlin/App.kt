@@ -1,3 +1,9 @@
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,15 +37,22 @@ fun App() {
             color = MaterialTheme.colors.background
         ) {
             
-            if (gameState.gameStarted){
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                StartScreen(
+                    gameState = gameState,
+                    setupGame = viewModel::setupGame,
+                    startGame = viewModel::startGame
+                )
+
                 CardGrid(
                     gameState = gameState,
                     onCardFlipped = viewModel::flipCard
                 )
-            }
-            else {
-
-                StartScreen(setupGame = viewModel::setupGame, startGame = viewModel::startGame)
 
             }
 
@@ -51,24 +64,31 @@ fun App() {
 @Composable
 fun StartScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
+    gameState: GameState,
     setupGame: (amountOfCards: Int) -> Unit = {},
     startGame: () -> Unit = {}
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    AnimatedVisibility(
+        visible = !gameState.gameStarted,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ){
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Button(
-            onClick = {
-                setupGame(10)
-                startGame()
-                      },
-        ){
-            Text(text = "Start Game")
+            Button(
+                onClick = {
+                    setupGame(10)
+                    startGame()
+                },
+            ){
+                Text(text = "Start Game")
+            }
+
         }
-
     }
 }
 
@@ -78,20 +98,32 @@ fun CardGrid(
     gameState: GameState = GameState(),
     onCardFlipped: (index: Int) -> Unit = {}
 ){
-    LazyVerticalGrid(
-        modifier = modifier,
-        columns = GridCells.Fixed(2),
-    ) {
-        itemsIndexed(gameState.cards) { index, card ->
-            CardFlippable(
-                card = card,
-                onFlipped = {
-                    if (gameState.cardsSelectable){
-                        onCardFlipped(index)
-                    }
-                }
+    AnimatedVisibility(
+        visible = gameState.gameStarted,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ){
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                columns = GridCells.Fixed(2),
+            ) {
+                itemsIndexed(gameState.cards) { index, card ->
+                    CardFlippable(
+                        card = card,
+                        onFlipped = {
+                            if (gameState.cardsSelectable){
+                                onCardFlipped(index)
+                            }
+                        }
 
-            )
+                    )
+                }
+            }
         }
     }
 }
