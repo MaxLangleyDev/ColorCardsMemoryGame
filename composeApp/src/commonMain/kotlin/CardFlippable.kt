@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -34,8 +36,8 @@ fun CardFlippable(
     )
 
     Box(
-        modifier = Modifier
-            .size(200.dp)
+        modifier = modifier
+            .sizeIn(50.dp, 50.dp, 150.dp, 150.dp)
             .padding(4.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -44,22 +46,23 @@ fun CardFlippable(
         contentAlignment = Alignment.Center
     ) {
         if (rotationY <= 90f) {
-            FrontSide(card = card, rotationY = rotationY, density = density)
+            FrontSide(modifier = modifier, card = card, rotationY = rotationY, density = density)
         } else {
-            BackSide(rotationY, density)
+            BackSide(modifier = modifier, rotationY = rotationY, density =  density)
         }
     }
 }
 
 @Composable
 fun FrontSide(
+    modifier: Modifier = Modifier,
     card: GameCard,
     rotationY: Float,
     density: Float
 ) {
     Box(
-        modifier = Modifier
-            .size(200.dp)
+        modifier = modifier
+            .sizeIn(50.dp, 50.dp, 100.dp, 100.dp)
             .graphicsLayer(
                 rotationY = rotationY,
                 cameraDistance = 8 * density
@@ -73,11 +76,15 @@ fun FrontSide(
 }
 
 @Composable
-fun BackSide(rotationY: Float, density: Float) {
+fun BackSide(
+    modifier: Modifier = Modifier,
+    rotationY: Float,
+    density: Float
+) {
 
     Box(
-        modifier = Modifier
-            .size(200.dp)
+        modifier = modifier
+            .sizeIn(50.dp, 50.dp, 150.dp, 150.dp)
             .graphicsLayer(
                 rotationY = rotationY - 180f,
                 cameraDistance = 8 * density
