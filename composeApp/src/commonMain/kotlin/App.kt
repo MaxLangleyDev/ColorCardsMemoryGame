@@ -1,7 +1,6 @@
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -38,31 +35,18 @@ fun App() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
-            
-            Column(
+
+            StartScreen(
+                gameState = gameState,
+                setupGame = viewModel::setupGame,
+                startGame = viewModel::startGame
+            )
+
+            GameBoard(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                StartScreen(
-                    gameState = gameState,
-                    setupGame = viewModel::setupGame,
-                    startGame = viewModel::startGame
-                )
-
-//                CardGrid(
-//                    gameState = gameState,
-//                    onCardFlipped = viewModel::flipCard
-//                )
-
-                GameBoard(
-                    modifier = Modifier.fillMaxSize(),
-                    gameState = gameState,
-                    onCardFlipped = viewModel::flipCard
-                )
-
-            }
+                gameState = gameState,
+                onCardFlipped = viewModel::flipCard
+            )
 
         }
 
@@ -77,9 +61,11 @@ fun StartScreen(
     startGame: () -> Unit = {}
 ) {
     AnimatedVisibility(
-        visible = !gameState.gameStarted,
-        enter = fadeIn(),
-        exit = fadeOut()
+        visible = gameState.showStartScreen,
+        enter = slideInVertically(),
+        exit = slideOutVertically(
+            animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
+        )
     ){
         Column(
             modifier = modifier,
@@ -96,42 +82,6 @@ fun StartScreen(
                 Text(text = "Start Game")
             }
 
-        }
-    }
-}
-
-@Composable
-fun CardGrid(
-    modifier: Modifier = Modifier,
-    gameState: GameState = GameState(),
-    onCardFlipped: (index: Int) -> Unit = {}
-){
-    AnimatedVisibility(
-        visible = gameState.gameStarted,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ){
-        Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxSize(),
-                columns = GridCells.Fixed(2),
-            ) {
-                itemsIndexed(gameState.cards) { index, card ->
-                    CardFlippable(
-                        card = card,
-                        onFlipped = {
-                            if (gameState.cardsSelectable){
-                                onCardFlipped(index)
-                            }
-                        }
-
-                    )
-                }
-            }
         }
     }
 }
