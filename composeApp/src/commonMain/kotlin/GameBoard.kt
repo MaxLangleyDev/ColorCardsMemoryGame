@@ -1,15 +1,14 @@
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -23,18 +22,24 @@ fun GameBoard(
     onCardFlipped: (Int) -> Unit
 ){
     AnimatedVisibility(
-        visible = gameState.gameStarted,
-        enter = fadeIn(),
-        exit = fadeOut()
+        modifier = modifier,
+        visible = gameState.showGameScreen,
+        enter = slideInVertically(
+            animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
+        ),
+        exit = slideOutVertically(
+            animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
+        )
     ){
 
         Column(
-            modifier = modifier,
+//            modifier = modifier,
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             repeat(rows) { row ->
                 Row(
+                    modifier = Modifier.weight(0.25f),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     repeat(columns) { column ->
