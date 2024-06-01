@@ -90,17 +90,26 @@ class GameViewModel(
     }
 
     fun startGame() {
-        _gameState.update { gameState ->
-            gameState.copy(
-                gameStarted = true
-            )
-        }
-
         viewModelScope.launch {
+            _gameState.update { gameState ->
+                gameState.copy(
+                    showStartScreen = false
+                )
+            }
+
+            delay(325)
+
+            _gameState.update { gameState ->
+                gameState.copy(
+                    showGameScreen = true
+                )
+            }
+
+            delay(300)
 
             flipAllCardsUp()
 
-            delay(4000)
+            delay(3000)
 
             flipAllCardsDown()
 
