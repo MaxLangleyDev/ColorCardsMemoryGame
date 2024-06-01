@@ -6,7 +6,9 @@ data class GameState(
     val colorToFind: Color = Color(0x000000),
     val points: Int = 0,
 
-    val gameStarted: Boolean = false,
+    val showStartScreen: Boolean = true,
+    val showGameScreen: Boolean = false,
+
     val cardsSelectable: Boolean = false,
 
     )
