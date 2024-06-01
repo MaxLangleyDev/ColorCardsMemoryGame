@@ -9,7 +9,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,7 +39,7 @@ fun App() {
             }
             else {
 
-                StartScreen(startEvent = viewModel::startGame)
+                StartScreen(setupGame = viewModel::setupGame, startGame = viewModel::startGame)
 
             }
 
@@ -52,7 +51,8 @@ fun App() {
 @Composable
 fun StartScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
-    startEvent: (amountOfCards: Int) -> Unit = {}
+    setupGame: (amountOfCards: Int) -> Unit = {},
+    startGame: () -> Unit = {}
 ) {
     Column(
         modifier = modifier,
@@ -61,7 +61,10 @@ fun StartScreen(
     ) {
 
         Button(
-            onClick = { startEvent(10) },
+            onClick = {
+                setupGame(10)
+                startGame()
+                      },
         ){
             Text(text = "Start Game")
         }
@@ -73,7 +76,6 @@ fun StartScreen(
 fun CardGrid(
     modifier: Modifier = Modifier,
     gameState: GameState = GameState(),
-//    cards: List<GameCard> = listOf(),
     onCardFlipped: (index: Int) -> Unit = {}
 ){
     LazyVerticalGrid(
