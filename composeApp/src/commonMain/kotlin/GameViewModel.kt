@@ -82,6 +82,7 @@ class GameViewModel(
         _gameState.update { gameState ->
             gameState.copy(
                 cards = cards,
+                colorToFind = colors.random()
             )
         }
     }
