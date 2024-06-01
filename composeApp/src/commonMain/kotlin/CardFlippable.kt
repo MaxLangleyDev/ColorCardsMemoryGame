@@ -37,7 +37,6 @@ fun CardFlippable(
 
     Box(
         modifier = modifier
-            .sizeIn(50.dp, 50.dp, 150.dp, 150.dp)
             .padding(4.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -62,7 +61,7 @@ fun FrontSide(
 ) {
     Box(
         modifier = modifier
-            .sizeIn(50.dp, 50.dp, 100.dp, 100.dp)
+            .fillMaxSize()
             .graphicsLayer(
                 rotationY = rotationY,
                 cameraDistance = 8 * density
@@ -84,7 +83,7 @@ fun BackSide(
 
     Box(
         modifier = modifier
-            .sizeIn(50.dp, 50.dp, 150.dp, 150.dp)
+            .fillMaxSize()
             .graphicsLayer(
                 rotationY = rotationY - 180f,
                 cameraDistance = 8 * density
