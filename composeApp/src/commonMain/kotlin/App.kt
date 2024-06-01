@@ -19,6 +19,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -49,7 +51,13 @@ fun App() {
                     startGame = viewModel::startGame
                 )
 
-                CardGrid(
+//                CardGrid(
+//                    gameState = gameState,
+//                    onCardFlipped = viewModel::flipCard
+//                )
+
+                GameBoard(
+                    modifier = Modifier.fillMaxSize(),
                     gameState = gameState,
                     onCardFlipped = viewModel::flipCard
                 )
@@ -81,7 +89,7 @@ fun StartScreen(
 
             Button(
                 onClick = {
-                    setupGame(10)
+                    setupGame(12)
                     startGame()
                 },
             ){
