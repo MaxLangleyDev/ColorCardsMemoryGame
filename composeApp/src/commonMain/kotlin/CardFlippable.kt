@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
@@ -20,7 +21,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun CardFlippable(
@@ -70,7 +74,13 @@ fun FrontSide(
             .alpha(if (rotationY <= 90f) 1f else 0f),
         contentAlignment = Alignment.Center
     ) {
-        // Add your front side content here
+        if (card.isCorrect){
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Star Icon",
+                tint = Color.White
+            )
+        }
     }
 }
 
@@ -92,10 +102,6 @@ fun BackSide(
             .alpha(if (rotationY > 90f) 1f else 0f),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = Icons.Default.Star,
-            contentDescription = "Star Icon",
-            tint = Color.White
-        )
+        Text(text = "?", fontWeight = FontWeight.Bold, fontSize = 32.sp)
     }
 }
