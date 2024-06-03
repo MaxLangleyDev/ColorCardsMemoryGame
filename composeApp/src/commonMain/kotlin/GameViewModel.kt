@@ -25,7 +25,12 @@ class GameViewModel(
             _gameState.value = _gameState.value.copy(cards = mutableCardsList)
         }
     }
-    fun checkForMatch() {
+    fun checkForMatch(
+        cardColor: Color,
+        colorToFind: Color
+    ) {
+
+
 
     }
 
@@ -64,6 +69,7 @@ class GameViewModel(
     ) {
         val cards = mutableListOf<GameCard>()
         val colors = listOf(Color.Red, Color.Blue, Color.Green, Color.Yellow)
+        val colorToFind = colors.random()
 
         var currentColorIndex = 0
 
@@ -72,7 +78,8 @@ class GameViewModel(
                 GameCard(
                     cardNumber = index + 1,
                     isFlipped = true,
-                    color = colors[currentColorIndex]
+                    color = colors[currentColorIndex],
+                    isCorrect = colors[currentColorIndex] == colorToFind
                 )
             )
 
@@ -84,7 +91,7 @@ class GameViewModel(
         _gameState.update { gameState ->
             gameState.copy(
                 cards = cards,
-                colorToFind = colors.random()
+                colorToFind = colorToFind
             )
         }
     }
