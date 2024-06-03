@@ -6,9 +6,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -20,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import presentation.GameBoard
+import presentation.GameViewModel
 
 
 @Composable
@@ -45,7 +44,7 @@ fun App() {
             GameBoard(
                 modifier = Modifier.fillMaxSize(),
                 gameState = gameState,
-                onCardFlipped = viewModel::flipCard
+                onCardFlipped = viewModel::userFlipCard
             )
 
         }
