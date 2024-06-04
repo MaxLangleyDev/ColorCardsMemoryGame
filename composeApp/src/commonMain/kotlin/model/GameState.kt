@@ -6,11 +6,17 @@ data class GameState(
 
     val cards: List<CardState> = listOf(),
     val colors: List<Color> = listOf(Color.Red, Color.Blue, Color.Green, Color.Yellow),
-    val colorToFind: Color = Color(0x000000),
+    val colorsToFind: List<Color> = listOf(),
+    val currentTargetColor: Color = Color(0x000000),
     val points: Int = 0,
+
+    val consecutiveFails: Int = 0,
+    val consecutiveMatches: Int = 0,
 
     val showingStartScreen: Boolean = true,
     val showingGameScreen: Boolean = false,
+    val showingGameLostScreen: Boolean = false,
+    val showingGameWonScreen: Boolean = false,
 
     val pregamePhase: Boolean = false,
     val gamePhase: Boolean = false,
