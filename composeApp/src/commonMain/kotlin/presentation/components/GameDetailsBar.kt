@@ -57,7 +57,7 @@ fun GameDetailsBar(
             ){
                 Text(text = "Find: ")
                 Spacer(modifier = Modifier.width(4.dp))
-                Box(Modifier.size(20.dp).background(color = gameState.colorToFind))
+                Box(Modifier.size(20.dp).background(color = gameState.currentTargetColor))
             }
             Row(
                 modifier = Modifier.fillMaxWidth().padding(4.dp),
