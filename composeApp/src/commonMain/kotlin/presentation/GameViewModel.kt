@@ -2,7 +2,6 @@ package presentation
 
 import model.CardState
 import model.GameState
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -114,11 +113,49 @@ class GameViewModel(
         }
     }
 
+    private fun pregameCountdown(seconds: Long = 3){
+
+        val interval = (seconds * 1000) / 10
+        viewModelScope.launch {
+            for (i in 1..10) {
+                delay(interval)
+                _gameState.update { gameState ->
+                    gameState.copy(
+                        pregameCountdown = gameState.pregameCountdown - 0.1f,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun startGameTimer(seconds: Long = 10){
+        val interval = (seconds * 1000) / 10
+        viewModelScope.launch {
+
+            _gameState.update { gameState ->
+                gameState.copy(
+                    pregamePhase = false,
+                    gamePhase = true,
+                )
+            }
+
+            for (i in 1..10) {
+                delay(interval)
+                _gameState.update { gameState ->
+                    gameState.copy(
+                        gameCountdown = gameState.gameCountdown - 0.1f,
+                    )
+                }
+            }
+        }
+    }
+
+
     fun startGame() {
         viewModelScope.launch {
             _gameState.update { gameState ->
                 gameState.copy(
-                    showStartScreen = false
+                    showingStartScreen = false
                 )
             }
 
@@ -126,8 +163,8 @@ class GameViewModel(
 
             _gameState.update { gameState ->
                 gameState.copy(
-                    showGameScreen = true,
-                    phasePregame = true
+                    showingGameScreen = true,
+                    pregamePhase = true
                 )
             }
 
@@ -135,23 +172,13 @@ class GameViewModel(
 
             flipAllCardsUp()
 
-            viewModelScope.launch {
-                for (i in 1..10) {
-                    delay(250)
-                    decrementCountdown()
-                }
-            }
-            delay(2500)
+            pregameCountdown()
+
+            delay(3000) // Wait 3s before flipping all cards down (matches countdown)
 
             flipAllCardsDown(isSelectable = true)
 
-            _gameState.update { gameState ->
-                gameState.copy(
-                    phasePregame = false,
-                    phaseGame = true,
-                    cardsSelectable = true
-                )
-            }
+            startGameTimer()
 
         }
 
