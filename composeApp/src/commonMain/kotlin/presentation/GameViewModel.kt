@@ -1,7 +1,7 @@
 package presentation
 
-import CardState
-import GameState
+import model.CardState
+import model.GameState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
