@@ -1,5 +1,6 @@
 package presentation
 
+import androidx.compose.ui.graphics.Color
 import model.CardState
 import model.GameState
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,7 @@ class GameViewModel(
     private val _gameState = MutableStateFlow(initialGameState)
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
 
-    fun userFlipCardUp(cardIndex: Int) {
+    fun playerFlipCardUp(cardIndex: Int) {
         val card = _gameState.value.cards[cardIndex]
 
         if (card.isSelectable && card.isFlippedDown){
@@ -76,18 +77,23 @@ class GameViewModel(
         amountOfCards: Int,
     ) {
         val cards = mutableListOf<CardState>()
+        val colorsToFind = mutableListOf<Color>()
         val colors = _gameState.value.colors
-        val colorToFind = colors.random()
+        val targetColor = colors.random()
 
         var currentColorIndex = 0
 
         repeat(amountOfCards) { index ->
+
+            val currentColor = colors[currentColorIndex]
+            colorsToFind.add(currentColor)
+
             cards.add(
                 CardState(
                     cardNumber = index + 1,
                     isFlippedDown = true,
-                    color = colors[currentColorIndex],
-                    isCorrect = colors[currentColorIndex] == colorToFind
+                    color = currentColor,
+                    isCorrect = currentColor == targetColor
                 )
             )
 
@@ -99,16 +105,8 @@ class GameViewModel(
         _gameState.update { gameState ->
             gameState.copy(
                 cards = cards,
-                colorToFind = colorToFind
-            )
-        }
-    }
-
-    private fun decrementCountdown(increment: Float = 0.1f){
-
-        _gameState.update { gameState ->
-            gameState.copy(
-                pregameCountdown = gameState.pregameCountdown - increment,
+                currentTargetColor = targetColor,
+                colorsToFind = colorsToFind
             )
         }
     }
@@ -150,7 +148,6 @@ class GameViewModel(
         }
     }
 
-
     fun startGame() {
         viewModelScope.launch {
             _gameState.update { gameState ->
@@ -184,7 +181,11 @@ class GameViewModel(
 
     }
 
-    fun updateGame(){
+    fun updateGame(lastFlippedCard : CardState){
+
+        val mutableCardsList = _gameState.value.cards.toMutableList()
+
+        
 
     }
 
