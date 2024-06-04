@@ -6,8 +6,8 @@ data class CardState(
     val cardNumber: Int = -1,
     val cardName: String = "",
     val color: Color = Color.Red,
-    val isFlipped: Boolean = false,
+    val isFlippedDown: Boolean = false,
     val isCorrect: Boolean = false,
-    val isSelectable: Boolean = true,
+    val isSelectable: Boolean = false,
     val isSelected: Boolean = false
 )
