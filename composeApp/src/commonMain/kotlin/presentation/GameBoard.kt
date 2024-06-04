@@ -1,6 +1,6 @@
 package presentation
 
-import GameState
+import model.GameState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
