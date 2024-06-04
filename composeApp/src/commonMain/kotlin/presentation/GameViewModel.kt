@@ -19,31 +19,32 @@ class GameViewModel(
     private val _gameState = MutableStateFlow(initialGameState)
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
 
-    fun userFlipCard(cardIndex: Int) {
-        if (_gameState.value.cards[cardIndex].isSelectable){
+    fun userFlipCardUp(cardIndex: Int) {
+        val card = _gameState.value.cards[cardIndex]
+
+        if (card.isSelectable && card.isFlippedDown){
+
             val mutableCardsList = _gameState.value.cards.toMutableList()
+
             mutableCardsList[cardIndex] =
-                mutableCardsList[cardIndex].copy(
-                    isFlipped = !mutableCardsList[cardIndex].isFlipped,
+                card.copy(
+                    isFlippedDown = false,
                     isSelected = true
                 )
+
             _gameState.value = _gameState.value.copy(cards = mutableCardsList)
+
         }
     }
-    fun checkForMatch(
-        cardColor: Color,
-        colorToFind: Color
-    ) {
 
-
-
-    }
-
-    private fun flipAllCardsDown() {
+    private fun flipAllCardsDown(isSelectable: Boolean = false) {
         val mutableCardsList = _gameState.value.cards.toMutableList()
 
         mutableCardsList.forEachIndexed { index, gameCard ->
-            mutableCardsList[index] = gameCard.copy(isFlipped = true)
+            mutableCardsList[index] = gameCard.copy(
+                isFlippedDown = true,
+                isSelectable = isSelectable
+            )
         }
 
         _gameState.update { gameState ->
@@ -54,11 +55,14 @@ class GameViewModel(
 
     }
 
-    private fun flipAllCardsUp() {
+    private fun flipAllCardsUp(isSelectable: Boolean = false) {
         val mutableCardsList = _gameState.value.cards.toMutableList()
 
         mutableCardsList.forEachIndexed { index, gameCard ->
-            mutableCardsList[index] = gameCard.copy(isFlipped = false)
+            mutableCardsList[index] = gameCard.copy(
+                isFlippedDown = false,
+                isSelectable = isSelectable
+            )
         }
 
         _gameState.update { gameState ->
@@ -73,7 +77,7 @@ class GameViewModel(
         amountOfCards: Int,
     ) {
         val cards = mutableListOf<CardState>()
-        val colors = listOf(Color.Red, Color.Blue, Color.Green, Color.Yellow)
+        val colors = _gameState.value.colors
         val colorToFind = colors.random()
 
         var currentColorIndex = 0
@@ -82,7 +86,7 @@ class GameViewModel(
             cards.add(
                 CardState(
                     cardNumber = index + 1,
-                    isFlipped = true,
+                    isFlippedDown = true,
                     color = colors[currentColorIndex],
                     isCorrect = colors[currentColorIndex] == colorToFind
                 )
@@ -123,7 +127,7 @@ class GameViewModel(
 
             delay(2000)
 
-            flipAllCardsDown()
+            flipAllCardsDown(isSelectable = true)
 
             _gameState.update { gameState ->
                 gameState.copy(
@@ -132,6 +136,10 @@ class GameViewModel(
             }
 
         }
+
+    }
+
+    fun updateGame(){
 
     }
 
