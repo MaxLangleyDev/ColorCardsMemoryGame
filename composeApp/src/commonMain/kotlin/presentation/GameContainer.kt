@@ -43,7 +43,7 @@ fun GameContainer(){
         GameScreen(
             modifier = Modifier.fillMaxSize(),
             gameState = gameState,
-            onCardFlipped = viewModel::userFlipCardUp
+            onCardFlipped = viewModel::playerFlipCardUp
         )
     }
 }
