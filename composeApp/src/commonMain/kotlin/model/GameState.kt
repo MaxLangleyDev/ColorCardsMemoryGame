@@ -1,7 +1,6 @@
 package model
 
 import androidx.compose.ui.graphics.Color
-import model.CardState
 
 data class GameState(
 
@@ -12,6 +11,12 @@ data class GameState(
 
     val showStartScreen: Boolean = true,
     val showGameScreen: Boolean = false,
+
+    val phasePregame: Boolean = false,
+    val phaseGame: Boolean = false,
+    val phaseEnd: Boolean = false,
+
+    var pregameCountdown: Float = 1f,
 
     val cardsSelectable: Boolean = false,
 
