@@ -105,6 +105,15 @@ class GameViewModel(
         }
     }
 
+    private fun decrementCountdown(increment: Float = 0.1f){
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                pregameCountdown = gameState.pregameCountdown - increment,
+            )
+        }
+    }
+
     fun startGame() {
         viewModelScope.launch {
             _gameState.update { gameState ->
@@ -113,11 +122,12 @@ class GameViewModel(
                 )
             }
 
-            delay(325)
+            delay(320)
 
             _gameState.update { gameState ->
                 gameState.copy(
-                    showGameScreen = true
+                    showGameScreen = true,
+                    phasePregame = true
                 )
             }
 
@@ -125,12 +135,20 @@ class GameViewModel(
 
             flipAllCardsUp()
 
-            delay(2000)
+            viewModelScope.launch {
+                for (i in 1..10) {
+                    delay(250)
+                    decrementCountdown()
+                }
+            }
+            delay(2500)
 
             flipAllCardsDown(isSelectable = true)
 
             _gameState.update { gameState ->
                 gameState.copy(
+                    phasePregame = false,
+                    phaseGame = true,
                     cardsSelectable = true
                 )
             }
