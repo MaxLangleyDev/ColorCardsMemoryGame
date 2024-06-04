@@ -9,15 +9,17 @@ data class GameState(
     val colorToFind: Color = Color(0x000000),
     val points: Int = 0,
 
-    val showStartScreen: Boolean = true,
-    val showGameScreen: Boolean = false,
+    val showingStartScreen: Boolean = true,
+    val showingGameScreen: Boolean = false,
 
-    val phasePregame: Boolean = false,
-    val phaseGame: Boolean = false,
-    val phaseEnd: Boolean = false,
+    val pregamePhase: Boolean = false,
+    val gamePhase: Boolean = false,
+    val endPhase: Boolean = false,
+
+    val gameWon: Boolean = false,
+    val gameLost: Boolean = false,
 
     var pregameCountdown: Float = 1f,
-
-    val cardsSelectable: Boolean = false,
+    var gameCountdown: Float = 1f,
 
     )
