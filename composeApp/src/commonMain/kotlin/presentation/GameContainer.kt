@@ -21,7 +21,7 @@ fun GameContainer(){
     val gameState by viewModel.gameState.collectAsState()
 
     AnimatedVisibility(
-        visible = gameState.showStartScreen,
+        visible = gameState.showingStartScreen,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { -it })
                 + fadeOut(animationSpec = tween(150))
@@ -36,7 +36,7 @@ fun GameContainer(){
     }
 
     AnimatedVisibility(
-        visible = gameState.showGameScreen,
+        visible = gameState.showingGameScreen,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { -it })
     ){
