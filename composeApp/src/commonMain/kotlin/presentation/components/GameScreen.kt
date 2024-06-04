@@ -4,6 +4,9 @@ import model.GameState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
@@ -49,4 +52,55 @@ fun GameScreen(
         }
     }
 
+
+
+}
+
+@Composable
+fun GameLostScreen(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    gameState: GameState = GameState(),
+    onRestart: () -> Unit,
+    onReturnToMenu: () -> Unit
+){
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Game Over")
+        Text(text = "Three strikes and you're out...")
+        Text(text = "Points: ${gameState.points}")
+        Button(onClick = onRestart) {
+            Text(text = "Restart")
+        }
+        Button(onClick = onReturnToMenu) {
+            Text(text = "Return To Menu")
+        }
+    }
+}
+
+@Composable
+fun GameWonScreen(
+    modifier: Modifier = Modifier.fillMaxSize(),
+    gameState: GameState = GameState(),
+    onRestart: () -> Unit,
+    onReturnToMenu: () -> Unit
+
+){
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Game Over")
+        Text(text = "You Won!")
+        Text(text = "Points: ${gameState.points}")
+        Button(onClick = onRestart) {
+            Text(text = "Restart")
+        }
+        Button(onClick = onReturnToMenu) {
+            Text(text = "Return To Menu")
+        }
+    }
 }
