@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -19,11 +21,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import colorcardsmemorygame.composeapp.generated.resources.Res
+import colorcardsmemorygame.composeapp.generated.resources.game_over
+import colorcardsmemorygame.composeapp.generated.resources.points
+import colorcardsmemorygame.composeapp.generated.resources.restart
+import colorcardsmemorygame.composeapp.generated.resources.return_to_menu
+import colorcardsmemorygame.composeapp.generated.resources.three_strikes
+import colorcardsmemorygame.composeapp.generated.resources.you_won
 import model.GameState
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+
 
 @Composable
 fun GameScreen(
@@ -90,11 +100,6 @@ fun GameScreen(
             onReturnToMenu = { onReturnToMenu() }
         )
     }
-
-
-
-
-
 }
 
 @Composable
@@ -104,27 +109,32 @@ fun GameLostScreen(
     onRestart: () -> Unit,
     onReturnToMenu: () -> Unit
 ){
-    Column(
-        modifier = Modifier
-            .wrapContentSize()
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Game Over")
-        Text(text = "Three strikes and you're out...")
-        Text(text = "Points: ${gameState.points}")
-        Button(
-            onClick = onRestart
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ){
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Restart")
-        }
-        Button(
-            onClick = onReturnToMenu
-        ) {
-            Text(text = "Return To Menu")
+            Text(text = stringResource(Res.string.game_over))
+            Text(text = stringResource(Res.string.three_strikes))
+            Text(text = stringResource(Res.string.points, gameState.points))
+            Button(
+                onClick = onRestart
+            ) {
+                Text(text = stringResource(Res.string.restart))
+            }
+            Button(
+                onClick = onReturnToMenu
+            ) {
+                Text(text = stringResource(Res.string.return_to_menu))
+            }
         }
     }
 }
@@ -144,14 +154,14 @@ fun GameWonScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Game Over")
-        Text(text = "You Won!")
-        Text(text = "Points: ${gameState.points}")
+        Text(text = stringResource(Res.string.game_over))
+        Text(text = stringResource(Res.string.you_won))
+        Text(text = stringResource(Res.string.points, gameState.points))
         Button(onClick = onRestart) {
-            Text(text = "Restart")
+            Text(text = stringResource(Res.string.restart))
         }
         Button(onClick = onReturnToMenu) {
-            Text(text = "Return To Menu")
+            Text(text = stringResource(Res.string.return_to_menu))
         }
     }
 }
