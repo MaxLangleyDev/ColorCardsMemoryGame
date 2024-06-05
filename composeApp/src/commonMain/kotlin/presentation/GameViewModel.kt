@@ -164,7 +164,8 @@ class GameViewModel(
         viewModelScope.launch {
             _gameState.update { gameState ->
                 gameState.copy(
-                    showingStartScreen = false
+                    showingStartScreen = false,
+                    showingTransitionScreen = false,
                 )
             }
 
@@ -177,7 +178,7 @@ class GameViewModel(
                 )
             }
 
-            delay(300)
+            delay(500)
 
             flipAllCardsUp()
 
@@ -263,11 +264,26 @@ class GameViewModel(
 
         mutableColorsToFind.remove(lastFlippedCard.color)
 
+    }
 
+    fun restartGame(){
+        viewModelScope.launch {
+            _gameState.update { gameState ->
+                gameState.copy(
+                    showingStartScreen = false,
+                    showingGameScreen = false,
+                    showingGameLostScreen = false,
+                    showingGameWonScreen = false,
+                    showingTransitionScreen = true
+                    )
+            }
 
+            delay(300)
 
-        
+            setupGame(amountOfCards = 12)
 
+            startGame()
+        }
     }
 
 
