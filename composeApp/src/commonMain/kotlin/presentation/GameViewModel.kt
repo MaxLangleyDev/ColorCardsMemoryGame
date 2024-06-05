@@ -18,6 +18,87 @@ class GameViewModel(
 
     private val _gameState = MutableStateFlow(initialGameState)
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
+    fun setupGame(
+        amountOfCards: Int,
+    ) {
+        val cards = mutableListOf<CardState>()
+        val colorsToFind = mutableListOf<Color>()
+        val colors = _gameState.value.colors
+        val targetColor = colors.random()
+
+        var currentColorIndex = 0
+
+        repeat(amountOfCards) { index ->
+
+            val currentColor = colors[currentColorIndex]
+            colorsToFind.add(currentColor)
+
+            cards.add(
+                CardState(
+                    cardNumber = index + 1,
+                    isFlippedDown = true,
+                    color = currentColor,
+                    isCorrect = currentColor == targetColor
+                )
+            )
+
+            currentColorIndex = (currentColorIndex + 1) % colors.size
+        }
+
+        cards.shuffle()
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                cards = cards,
+                totalCards = amountOfCards,
+                correctChoices = 0,
+                targetColor = targetColor,
+                colorsToFind = colorsToFind,
+                points = 0,
+                consecutiveMatches = 0,
+                consecutiveFails = 0,
+                gameLost = false,
+                gameWon = false,
+                gameCountdown = 1f,
+                pregameCountdown = 1f,
+                timedOut = false,
+                threeStrikes = false
+            )
+        }
+    }
+    fun startGame() {
+        viewModelScope.launch {
+            _gameState.update { gameState ->
+                gameState.copy(
+                    showingStartScreen = false,
+                    showingTransitionScreen = false,
+                )
+            }
+
+            delay(320)
+
+            _gameState.update { gameState ->
+                gameState.copy(
+                    showingGameScreen = true,
+                    pregamePhase = true
+                )
+            }
+
+            delay(500)
+
+            flipAllCardsUp()
+
+            pregameCountdown()
+
+            delay(3000) // Wait 3s before flipping all cards down (matches countdown)
+
+            flipAllCardsDown(isSelectable = true)
+
+            startGameTimer()
+
+        }
+
+    }
 
     fun playerFlipCardUp(cardIndex: Int) {
         val card = _gameState.value.cards[cardIndex]
@@ -75,53 +156,6 @@ class GameViewModel(
 
     }
 
-    fun setupGame(
-        amountOfCards: Int,
-    ) {
-        val cards = mutableListOf<CardState>()
-        val colorsToFind = mutableListOf<Color>()
-        val colors = _gameState.value.colors
-        val targetColor = colors.random()
-
-        var currentColorIndex = 0
-
-        repeat(amountOfCards) { index ->
-
-            val currentColor = colors[currentColorIndex]
-            colorsToFind.add(currentColor)
-
-            cards.add(
-                CardState(
-                    cardNumber = index + 1,
-                    isFlippedDown = true,
-                    color = currentColor,
-                    isCorrect = currentColor == targetColor
-                )
-            )
-
-            currentColorIndex = (currentColorIndex + 1) % colors.size
-        }
-
-        cards.shuffle()
-
-        _gameState.update { gameState ->
-            gameState.copy(
-                cards = cards,
-                targetColor = targetColor,
-                colorsToFind = colorsToFind,
-                points = 0,
-                consecutiveMatches = 0,
-                consecutiveFails = 0,
-                gameLost = false,
-                gameWon = false,
-                gameCountdown = 1f,
-                pregameCountdown = 1f,
-                timedOut = false,
-                threeStrikes = false
-            )
-        }
-    }
-
     private fun pregameCountdown(seconds: Long = 3){
 
         val interval = (seconds * 1000) / 10
@@ -160,42 +194,8 @@ class GameViewModel(
                 }
             }
 
-            loseGame("timed_out")
+            if (!_gameState.value.gameWon) loseGame("timed_out")
         }
-    }
-
-    fun startGame() {
-        viewModelScope.launch {
-            _gameState.update { gameState ->
-                gameState.copy(
-                    showingStartScreen = false,
-                    showingTransitionScreen = false,
-                )
-            }
-
-            delay(320)
-
-            _gameState.update { gameState ->
-                gameState.copy(
-                    showingGameScreen = true,
-                    pregamePhase = true
-                )
-            }
-
-            delay(500)
-
-            flipAllCardsUp()
-
-            pregameCountdown()
-
-            delay(3000) // Wait 3s before flipping all cards down (matches countdown)
-
-            flipAllCardsDown(isSelectable = true)
-
-            startGameTimer()
-
-        }
-
     }
 
     private fun updateConsecutiveMatches(){
@@ -205,7 +205,8 @@ class GameViewModel(
             gameState.copy(
                 points = gameState.points + (50 * consecutiveMatches),
                 consecutiveMatches = consecutiveMatches,
-                consecutiveFails = 0
+                consecutiveFails = 0,
+                correctChoices = gameState.correctChoices + 1,
             )
         }
     }
@@ -221,49 +222,6 @@ class GameViewModel(
                 points = gameState.points - (50 * consecutiveFails),
             )
         }
-    }
-
-    private fun loseGame(loseCondition: String = "timed_out"){
-        viewModelScope.launch {
-            flipAllCardsUp(isSelectable = false)
-
-            delay(300)
-
-            when (loseCondition){
-                "timed_out" -> {
-                    _gameState.update { gameState ->
-                        gameState.copy(
-                            perfectGame = false,
-                            gameLost = true,
-                            timedOut = true,
-                            showingGameLostScreen = true
-                            )
-                    }
-                }
-
-                "three_strikes" -> {
-                    _gameState.update { gameState ->
-                        gameState.copy(
-                            perfectGame = false,
-                            gameLost = true,
-                            threeStrikes = true,
-                            showingGameLostScreen = true
-                        )
-                    }
-                }
-
-                else -> {
-                    _gameState.update { gameState ->
-                        gameState.copy(
-                            perfectGame = false,
-                            gameLost = true,
-                            showingGameLostScreen = true
-                        )
-                    }
-                }
-            }
-        }
-
     }
 
     private fun updateColorsToFind(lastColorRevealed : Color){
@@ -292,6 +250,23 @@ class GameViewModel(
         }
     }
 
+    private fun updateCorrectCards() {
+        val mutableCardsList = _gameState.value.cards.toMutableList()
+
+        mutableCardsList.forEachIndexed { index, gameCard ->
+            if (gameCard.isFlippedDown){
+                mutableCardsList[index] = gameCard.copy(
+                    isCorrect = gameCard.color == _gameState.value.targetColor
+                )
+            }
+        }
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                cards = mutableCardsList
+            )
+        }
+    }
 
     private fun checkForMatchAndUpdate(lastFlippedCard : CardState){
 
@@ -307,26 +282,68 @@ class GameViewModel(
             }
         }
 
-       updateColorsToFind(lastColorRevealed = lastFlippedCard.color)
+        updateColorsToFind(lastColorRevealed = lastFlippedCard.color)
 
-        updateCorrectCards()
+        if (_gameState.value.colorsToFind.isEmpty()){
+            winGame()
+        }
+        else updateCorrectCards()
 
     }
 
-    private fun updateCorrectCards() {
-        val mutableCardsList = _gameState.value.cards.toMutableList()
+    private fun loseGame(loseCondition: String = "timed_out"){
+        viewModelScope.launch {
+            flipAllCardsUp(isSelectable = false)
 
-        mutableCardsList.forEachIndexed { index, gameCard ->
-            if (gameCard.isFlippedDown){
-                mutableCardsList[index] = gameCard.copy(
-                    isCorrect = gameCard.color == _gameState.value.targetColor
-                )
+            delay(300)
+
+            when (loseCondition){
+                "timed_out" -> {
+                    _gameState.update { gameState ->
+                        gameState.copy(
+                            perfectGame = false,
+                            gameLost = true,
+                            timedOut = true,
+                            showingGameLostScreen = true
+                        )
+                    }
+                }
+
+                "three_strikes" -> {
+                    _gameState.update { gameState ->
+                        gameState.copy(
+                            perfectGame = false,
+                            gameLost = true,
+                            threeStrikes = true,
+                            showingGameLostScreen = true
+                        )
+                    }
+                }
+
+                else -> {
+                    _gameState.update { gameState ->
+                        gameState.copy(
+                            perfectGame = false,
+                            gameLost = true,
+                            showingGameLostScreen = true
+                        )
+                    }
+                }
             }
         }
 
+    }
+
+    private fun winGame() {
         _gameState.update { gameState ->
             gameState.copy(
-                cards = mutableCardsList
+                gameWon = true,
+                showingGameWonScreen = true,
+                points = if (gameState.perfectGame) {
+                    gameState.points + 100
+                } else {
+                    gameState.points
+                }
             )
         }
     }
