@@ -20,6 +20,9 @@ data class GameState(
     val showingTransitionScreen: Boolean = false,
     val showingGameLostScreen: Boolean = false,
     val showingGameWonScreen: Boolean = false,
+    val showingTutorialMessage: Boolean = false,
+
+    val tutorialMessageEnabled: Boolean = true,
 
     val pregamePhase: Boolean = false,
     val gamePhase: Boolean = false,
@@ -34,7 +37,7 @@ data class GameState(
     var pregameCountdown: Float = 1f,
     var gameCountdown: Float = 1f,
 
-    val showTutorialMessage: Boolean = true,
+
 
     // Cheats
     val showColorOnBack: Boolean = true,
