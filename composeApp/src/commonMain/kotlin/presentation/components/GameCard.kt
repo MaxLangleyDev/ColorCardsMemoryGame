@@ -132,7 +132,7 @@ fun FrontSide(
             .alpha(if (rotationY <= 90f) 1f else 0f),
         contentAlignment = Alignment.Center
     ) {
-        if (card.isCorrect) {
+        if (card.isCorrect && card.isSelected) {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = "Star Icon",
