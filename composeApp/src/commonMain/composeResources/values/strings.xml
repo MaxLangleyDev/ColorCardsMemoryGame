@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Color Cards Memory Game</string>
+    <string name="game_over">Game Over</string>
+    <string name="three_strikes">Three strikes and you're out...</string>
+    <string name="points">Points: %1$d</string>
+    <string name="restart">Restart</string>
+    <string name="return_to_menu">Return To Menu</string>
+    <string name="you_won">You Won!</string>
+</resources>
