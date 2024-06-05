@@ -34,6 +34,8 @@ class GameViewModel(
 
             _gameState.value = _gameState.value.copy(cards = mutableCardsList)
 
+            checkForMatchAndUpdate(card)
+
         }
     }
 
@@ -105,8 +107,15 @@ class GameViewModel(
         _gameState.update { gameState ->
             gameState.copy(
                 cards = cards,
-                currentTargetColor = targetColor,
-                colorsToFind = colorsToFind
+                targetColor = targetColor,
+                colorsToFind = colorsToFind,
+                points = 0,
+                consecutiveMatches = 0,
+                consecutiveFails = 0,
+                gameLost = false,
+                gameWon = false,
+                gameCountdown = 1f,
+                pregameCountdown = 1f
             )
         }
     }
@@ -138,6 +147,9 @@ class GameViewModel(
             }
 
             for (i in 1..10) {
+                if (gameState.value.gameLost){
+                    break
+                }
                 delay(interval)
                 _gameState.update { gameState ->
                     gameState.copy(
@@ -181,9 +193,78 @@ class GameViewModel(
 
     }
 
-    fun updateGame(lastFlippedCard : CardState){
+    private fun updateConsecutiveMatches(){
+        val consecutiveMatches = _gameState.value.consecutiveMatches + 1
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                points = gameState.points + (50 * consecutiveMatches),
+                consecutiveMatches = consecutiveMatches,
+                consecutiveFails = 0
+            )
+        }
+    }
+
+    private fun updateConsecutiveFails(){
+        val consecutiveFails = _gameState.value.consecutiveFails + 1
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                consecutiveFails = consecutiveFails,
+                consecutiveMatches = 0,
+                points = gameState.points - (50 * consecutiveFails),
+                gameLost = consecutiveFails >= 3
+            )
+        }
+    }
+
+    private fun loseGame(){
+        viewModelScope.launch {
+            flipAllCardsUp(isSelectable = false)
+
+            delay(300)
+
+            _gameState.update { gameState ->
+                gameState.copy(
+                    showingGameLostScreen = true
+                )
+            }
+        }
+
+    }
+
+    fun returnToMenu(){
+        _gameState.update { gameState ->
+            gameState.copy(
+                showingStartScreen = true,
+                showingGameScreen = false,
+                showingGameLostScreen = false,
+                showingGameWonScreen = false,
+            )
+        }
+    }
+
+    private fun checkForMatchAndUpdate(lastFlippedCard : CardState){
 
         val mutableCardsList = _gameState.value.cards.toMutableList()
+        val mutableColorsToFind = _gameState.value.colorsToFind.toMutableList()
+        val targetColor = _gameState.value.targetColor
+
+
+        if (lastFlippedCard.isCorrect){
+            updateConsecutiveMatches()
+        }
+        else {
+            updateConsecutiveFails()
+            if (_gameState.value.gameLost){
+                loseGame()
+            }
+        }
+
+        mutableColorsToFind.remove(lastFlippedCard.color)
+
+
+
 
         
 
