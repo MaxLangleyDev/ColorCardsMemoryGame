@@ -16,6 +16,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.sp
 fun GameCard(
     modifier: Modifier = Modifier,
     card: CardState = CardState(),
+    showColorOnBack: Boolean = false,
     onFlipped: () -> Unit
 ) {
 
@@ -85,7 +87,13 @@ fun GameCard(
             )
 
         } else {
-            BackSide(modifier = modifier, rotationY = rotationY, density =  density)
+            BackSide(
+                modifier = modifier,
+                card = card,
+                showColorOnBack = showColorOnBack,
+                rotationY = rotationY,
+                density =  density
+            )
         }
     }
 }
@@ -133,54 +141,15 @@ fun FrontSide(
         }
     }
 }
-//@Composable
-//fun FrontSide(
-//    modifier: Modifier = Modifier,
-//    card: CardState,
-//    rotationY: Float,
-//    density: Float
-//) {
-//
-//    val animatedBorderColor by animateColorAsState(
-//        targetValue = if (card.isCorrect && card.isSelected) Color.Magenta else card.color,
-//        animationSpec = tween(durationMillis = 600)
-//    )
-//
-//    Box(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .graphicsLayer(
-//                rotationY = rotationY,
-//                cameraDistance = 8 * density
-//            )
-//            .clip(RoundedCornerShape(8.dp))
-//            .background(card.color)
-//            .border(
-//                width = 4.dp,
-//                color = animatedBorderColor,
-////                if (card.isCorrect && card.isSelected) Color.Magenta
-////                else card.color,
-//                shape = RoundedCornerShape(8.dp))
-//            .alpha(if (rotationY <= 90f) 1f else 0f),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        if (card.isCorrect){
-//            Icon(
-//                imageVector = Icons.Default.Star,
-//                contentDescription = "Star Icon",
-//                tint = Color.White
-//            )
-//        }
-//    }
-//}
 
 @Composable
 fun BackSide(
     modifier: Modifier = Modifier,
+    card: CardState = CardState(),
+    showColorOnBack: Boolean = false,
     rotationY: Float,
     density: Float
 ) {
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -194,5 +163,15 @@ fun BackSide(
         contentAlignment = Alignment.Center
     ) {
         Text(text = "?", fontWeight = FontWeight.Bold, fontSize = 32.sp)
+
+        if (showColorOnBack){
+            Box(
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(card.color)
+                    .align(Alignment.BottomEnd)
+            )
+        }
     }
 }
