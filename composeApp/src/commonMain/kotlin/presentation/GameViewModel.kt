@@ -80,11 +80,16 @@ class GameViewModel(
             _gameState.update { gameState ->
                 gameState.copy(
                     showingGameScreen = true,
-                    pregamePhase = true
+                    pregamePhase = true,
+                    showTutorialMessage = true
                 )
             }
 
             delay(500)
+
+            while (_gameState.value.showTutorialMessage){
+                delay(33)
+            }
 
             flipAllCardsUp()
 
@@ -376,6 +381,14 @@ class GameViewModel(
             setupGame(amountOfCards = 12)
 
             startGame()
+        }
+    }
+
+    fun dismissTutorial(){
+        _gameState.update { gameState ->
+            gameState.copy(
+                showTutorialMessage = false
+            )
         }
     }
 
