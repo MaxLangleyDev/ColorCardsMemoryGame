@@ -10,4 +10,11 @@
     <string name="perfect_game">Flawless Victory!</string>
     <string name="timed_out">You ran out of time!</string>
     <string name="you_got_x_out_of_y">You got %1$d out of %2$d cards correct.</string>">
+    <string name="tutorial_title">Tutorial</string>"
+    <string name="tutorial_message1">When the game starts, the cards will be briefly shown to you before flipping back over.</string>"
+    <string name="tutorial_message2">Do your best to remember the locations of each color card.</string>"
+    <string name="tutorial_message3">At the top of the screen you will be presented with a color to locate.</string>"
+    <string name="good_luck">Good luck!</string>"
+    <string name="im_ready">I'm Ready!</string>
+
 </resources>
