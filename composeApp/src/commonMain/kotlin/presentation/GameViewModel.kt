@@ -66,6 +66,7 @@ class GameViewModel(
             )
         }
     }
+
     fun startGame() {
         viewModelScope.launch {
             _gameState.update { gameState ->
@@ -75,21 +76,33 @@ class GameViewModel(
                 )
             }
 
-            delay(320)
+            delay(320) // Wait for start screen to disappear
 
             _gameState.update { gameState ->
                 gameState.copy(
                     showingGameScreen = true,
                     pregamePhase = true,
-                    showTutorialMessage = true
                 )
             }
 
-            delay(500)
+            delay(600) // Wait for game screen to appear
 
-            while (_gameState.value.showTutorialMessage){
-                delay(33)
+            if (_gameState.value.tutorialMessageEnabled){
+
+                _gameState.update { gameState ->
+                    gameState.copy(
+                        showingTutorialMessage = true
+                    )
+                }
+
+                // Wait for tutorial message to be dismissed
+                while (_gameState.value.showingTutorialMessage){
+                    delay(33)
+                }
+
             }
+
+            delay(300) // Wait for tutorial message to disappear
 
             flipAllCardsUp()
 
@@ -372,7 +385,8 @@ class GameViewModel(
                     showingGameScreen = false,
                     showingGameLostScreen = false,
                     showingGameWonScreen = false,
-                    showingTransitionScreen = true
+                    showingTransitionScreen = true,
+                    tutorialMessageEnabled = false
                     )
             }
 
@@ -387,7 +401,7 @@ class GameViewModel(
     fun dismissTutorial(){
         _gameState.update { gameState ->
             gameState.copy(
-                showTutorialMessage = false
+                showingTutorialMessage = false
             )
         }
     }
