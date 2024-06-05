@@ -34,6 +34,8 @@ data class GameState(
     var pregameCountdown: Float = 1f,
     var gameCountdown: Float = 1f,
 
+    val showTutorialMessage: Boolean = true,
+
     // Cheats
     val showColorOnBack: Boolean = true,
 
