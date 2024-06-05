@@ -78,7 +78,7 @@ fun GameCard(
         if (rotationY <= 90f) {
             shakeCard = card.isSelected && card.isCorrect
             FrontSide(
-                modifier = modifier,
+//                modifier = modifier,
                 card = card,
                 rotationY = rotationY,
                 rotationZ = if (shakeCard && rotationY != 0f) rotationCoefficient.value * 30f else 0f,
@@ -88,7 +88,7 @@ fun GameCard(
 
         } else {
             BackSide(
-                modifier = modifier,
+//                modifier = modifier,
                 card = card,
                 showColorOnBack = showColorOnBack,
                 rotationY = rotationY,
