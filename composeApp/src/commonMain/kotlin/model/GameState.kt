@@ -25,8 +25,15 @@ data class GameState(
 
     val gameWon: Boolean = false,
     val gameLost: Boolean = false,
+    val threeStrikes: Boolean = false,
+    val timedOut: Boolean = false,
+    val perfectGame: Boolean = true,
 
     var pregameCountdown: Float = 1f,
     var gameCountdown: Float = 1f,
+
+    // Cheats
+    val showColorOnBack: Boolean = true,
+
 
     )
