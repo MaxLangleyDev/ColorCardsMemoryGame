@@ -45,10 +45,9 @@ fun GameContainer(){
             modifier = Modifier.fillMaxSize(),
             gameState = gameState,
             onCardFlipped = viewModel::playerFlipCardUp,
-            onRestart = {
-                viewModel.restartGame()
-                        },
-            onReturnToMenu = { viewModel.returnToMenu() }
+            onRestart = viewModel::restartGame,
+            onReturnToMenu = viewModel::returnToMenu,
+            dismissTutorial = viewModel::dismissTutorial
         )
     }
 
