@@ -6,6 +6,8 @@
     <string name="points">Points: %1$d</string>
     <string name="restart">Restart</string>
     <string name="return_to_menu">Return To Menu</string>
-    <string name="you_won">You Won!</string>
+    <string name="you_won">You Win!</string>
+    <string name="perfect_game">Flawless Victory!</string>
     <string name="timed_out">You ran out of time!</string>
+    <string name="you_got_x_out_of_y">You got %1$d out of %2$d cards correct.</string>">
 </resources>
