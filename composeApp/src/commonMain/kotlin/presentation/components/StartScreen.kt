@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import colorcardsmemorygame.composeapp.generated.resources.Res
+import colorcardsmemorygame.composeapp.generated.resources.start_game
 import model.GameState
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun StartScreen(
@@ -29,7 +35,7 @@ fun StartScreen(
                 startGame()
             },
         ){
-            Text(text = "Start Game")
+            Text(text = stringResource(Res.string.start_game))
         }
 
     }
