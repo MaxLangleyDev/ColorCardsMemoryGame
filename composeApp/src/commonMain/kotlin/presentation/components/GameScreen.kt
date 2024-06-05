@@ -25,11 +25,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import colorcardsmemorygame.composeapp.generated.resources.Res
 import colorcardsmemorygame.composeapp.generated.resources.game_over
+import colorcardsmemorygame.composeapp.generated.resources.perfect_game
 import colorcardsmemorygame.composeapp.generated.resources.points
 import colorcardsmemorygame.composeapp.generated.resources.restart
 import colorcardsmemorygame.composeapp.generated.resources.return_to_menu
 import colorcardsmemorygame.composeapp.generated.resources.three_strikes
 import colorcardsmemorygame.composeapp.generated.resources.timed_out
+import colorcardsmemorygame.composeapp.generated.resources.you_got_x_out_of_y
 import colorcardsmemorygame.composeapp.generated.resources.you_won
 import model.GameState
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -69,7 +71,7 @@ fun GameScreen(
                             card = card,
                             showColorOnBack = gameState.showColorOnBack,
                             onFlipped = { onCardFlipped(index) },
-                            modifier = Modifier.weight(0.2f)
+                            modifier = Modifier.weight(0.12f)
                         )
                     }
                 }
@@ -131,6 +133,14 @@ fun GameLostScreen(
             }
             else Text(text = stringResource(Res.string.timed_out))
 
+            Text(
+                text = stringResource(
+                    Res.string.you_got_x_out_of_y,
+                    gameState.correctChoices,
+                    gameState.totalCards
+                )
+            )
+
             Text(text = stringResource(Res.string.points, gameState.points))
 
             Button(
@@ -150,27 +160,45 @@ fun GameLostScreen(
 
 @Composable
 fun GameWonScreen(
-    modifier: Modifier = Modifier.wrapContentSize(),
+    modifier: Modifier = Modifier.fillMaxSize(),
     gameState: GameState = GameState(),
     onRestart: () -> Unit,
     onReturnToMenu: () -> Unit
 
 ){
-    Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(8.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = stringResource(Res.string.game_over))
-        Text(text = stringResource(Res.string.you_won))
-        Text(text = stringResource(Res.string.points, gameState.points))
-        Button(onClick = onRestart) {
-            Text(text = stringResource(Res.string.restart))
-        }
-        Button(onClick = onReturnToMenu) {
-            Text(text = stringResource(Res.string.return_to_menu))
+    Box(modifier = modifier, contentAlignment = Alignment.Center){
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            if (gameState.perfectGame){
+                Text(text = stringResource(Res.string.perfect_game))
+            }
+            else Text(text = stringResource(Res.string.you_won))
+
+            Text(
+                text = stringResource(
+                Res.string.you_got_x_out_of_y,
+                gameState.correctChoices,
+                gameState.totalCards
+                )
+            )
+
+            Text(text = stringResource(Res.string.points, gameState.points))
+
+            Button(onClick = onRestart) {
+                Text(text = stringResource(Res.string.restart))
+            }
+
+            Button(onClick = onReturnToMenu) {
+                Text(text = stringResource(Res.string.return_to_menu))
+            }
         }
     }
 }
