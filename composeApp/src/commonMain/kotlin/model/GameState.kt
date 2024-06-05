@@ -7,7 +7,7 @@ data class GameState(
     val cards: List<CardState> = listOf(),
     val colors: List<Color> = listOf(Color.Red, Color.Blue, Color.Green, Color.Yellow),
     val colorsToFind: List<Color> = listOf(),
-    val currentTargetColor: Color = Color(0x000000),
+    val targetColor: Color = Color(0x000000),
     val points: Int = 0,
 
     val consecutiveFails: Int = 0,
