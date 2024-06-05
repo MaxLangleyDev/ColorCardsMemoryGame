@@ -29,6 +29,7 @@ import colorcardsmemorygame.composeapp.generated.resources.points
 import colorcardsmemorygame.composeapp.generated.resources.restart
 import colorcardsmemorygame.composeapp.generated.resources.return_to_menu
 import colorcardsmemorygame.composeapp.generated.resources.three_strikes
+import colorcardsmemorygame.composeapp.generated.resources.timed_out
 import colorcardsmemorygame.composeapp.generated.resources.you_won
 import model.GameState
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -66,6 +67,7 @@ fun GameScreen(
                     key(card.cardNumber) {
                         GameCard(
                             card = card,
+                            showColorOnBack = gameState.showColorOnBack,
                             onFlipped = { onCardFlipped(index) },
                             modifier = Modifier.weight(0.2f)
                         )
@@ -123,13 +125,20 @@ fun GameLostScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = stringResource(Res.string.game_over))
-            Text(text = stringResource(Res.string.three_strikes))
+
+            if (gameState.threeStrikes) {
+                Text(text = stringResource(Res.string.three_strikes))
+            }
+            else Text(text = stringResource(Res.string.timed_out))
+
             Text(text = stringResource(Res.string.points, gameState.points))
+
             Button(
                 onClick = onRestart
             ) {
                 Text(text = stringResource(Res.string.restart))
             }
+
             Button(
                 onClick = onReturnToMenu
             ) {
