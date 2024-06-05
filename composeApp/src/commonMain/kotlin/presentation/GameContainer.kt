@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,10 +46,28 @@ fun GameContainer(){
             gameState = gameState,
             onCardFlipped = viewModel::playerFlipCardUp,
             onRestart = {
-                viewModel.setupGame(12)
-                viewModel.startGame()
+                viewModel.restartGame()
                         },
             onReturnToMenu = { viewModel.returnToMenu() }
         )
+    }
+
+    AnimatedVisibility(
+        visible = gameState.showingTransitionScreen,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { -it })
+                + fadeOut(animationSpec = tween(150))
+
+    ){
+        TransitionScreen(
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Composable
+fun TransitionScreen(modifier: Modifier) {
+    Box(modifier = modifier){
+
     }
 }
