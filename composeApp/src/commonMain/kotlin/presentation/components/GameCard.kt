@@ -2,12 +2,14 @@ package presentation.components
 
 import model.CardState
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,6 +39,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 
 @Composable
 fun GameCard(
@@ -60,14 +63,35 @@ fun GameCard(
         initialValue = -1f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 150, easing = LinearEasing),
+            animation = tween(durationMillis = 60, easing = EaseOut),
             repeatMode = RepeatMode.Reverse
         )
     )
-    val shadowElevation by animateFloatAsState(100f)
+
+    val animatedBorderColor by animateColorAsState(
+        targetValue = if (card.isCorrect && card.isSelected) Color.Magenta else card.color,
+        animationSpec = tween(durationMillis = 600)
+    )
+
+    val scale = animateFloatAsState(
+        targetValue = if (card.isCorrect && card.isSelected && rotationY != 0f) 1.2f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+
+    val elevation = animateFloatAsState(
+        targetValue = if (card.isCorrect && card.isSelected && rotationY != 0f) 1000f else 0f, // Adjust 10f as needed
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
 
     Box(
         modifier = modifier
+            .zIndex(elevation.value)
             .padding(4.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -78,17 +102,17 @@ fun GameCard(
         if (rotationY <= 90f) {
             shakeCard = card.isSelected && card.isCorrect
             FrontSide(
-//                modifier = modifier,
                 card = card,
+                scale = scale.value,
+                animatedBorderColor = animatedBorderColor,
                 rotationY = rotationY,
                 rotationZ = if (shakeCard && rotationY != 0f) rotationCoefficient.value * 30f else 0f,
                 cameraDistance = cameraDistance,
-                shadowElevation = shadowElevation
+                shadowElevation = 100f
             )
 
         } else {
             BackSide(
-//                modifier = modifier,
                 card = card,
                 showColorOnBack = showColorOnBack,
                 rotationY = rotationY,
@@ -106,17 +130,17 @@ fun FrontSide(
     rotationY: Float,
     rotationZ: Float,
     cameraDistance: Float,
-    shadowElevation: Float
+    shadowElevation: Float,
+    scale: Float = 1f,
+    animatedBorderColor: Color = card.color
 ) {
-    val animatedBorderColor by animateColorAsState(
-        targetValue = if (card.isCorrect && card.isSelected) Color.Magenta else card.color,
-        animationSpec = tween(durationMillis = 600)
-    )
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
                 rotationY = rotationY,
                 rotationZ = rotationZ,
                 cameraDistance = cameraDistance,
