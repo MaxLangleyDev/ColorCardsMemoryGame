@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import presentation.components.GameScreen
+import presentation.components.gameScreen.GameScreen
 import presentation.components.StartScreen
 
 @Composable
