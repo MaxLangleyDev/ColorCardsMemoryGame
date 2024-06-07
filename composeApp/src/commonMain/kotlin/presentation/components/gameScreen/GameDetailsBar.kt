@@ -1,4 +1,4 @@
-package presentation.components
+package presentation.components.gameScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package presentation.components
+package presentation.components.gameScreen
 
 import model.CardState
 import androidx.compose.animation.animateColorAsState
@@ -39,14 +39,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 
 @Composable
 fun GameCard(
     modifier: Modifier = Modifier,
     card: CardState = CardState(),
     showColorOnBack: Boolean = false,
-    onFlipped: () -> Unit
+    onFlipped: () -> Unit = {}
 ) {
 
     val density = LocalDensity.current.density
@@ -81,17 +80,9 @@ fun GameCard(
         )
     )
 
-    val elevation = animateFloatAsState(
-        targetValue = if (card.isCorrect && card.isSelected && rotationY != 0f) 1000f else 0f, // Adjust 10f as needed
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    )
 
     Box(
         modifier = modifier
-            .zIndex(elevation.value)
             .padding(4.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -108,7 +99,6 @@ fun GameCard(
                 rotationY = rotationY,
                 rotationZ = if (shakeCard && rotationY != 0f) rotationCoefficient.value * 30f else 0f,
                 cameraDistance = cameraDistance,
-                shadowElevation = 100f
             )
 
         } else {
@@ -130,7 +120,6 @@ fun FrontSide(
     rotationY: Float,
     rotationZ: Float,
     cameraDistance: Float,
-    shadowElevation: Float,
     scale: Float = 1f,
     animatedBorderColor: Color = card.color
 ) {
@@ -144,7 +133,6 @@ fun FrontSide(
                 rotationY = rotationY,
                 rotationZ = rotationZ,
                 cameraDistance = cameraDistance,
-                shadowElevation = shadowElevation
             )
             .clip(RoundedCornerShape(8.dp))
             .background(card.color)
