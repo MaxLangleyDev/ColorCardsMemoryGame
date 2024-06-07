@@ -140,8 +140,7 @@ fun FrontSide(
                 width = 4.dp,
                 color = animatedBorderColor,
                 shape = RoundedCornerShape(8.dp)
-            )
-            .alpha(if (rotationY <= 90f) 1f else 0f),
+            ),
         contentAlignment = Alignment.Center
     ) {
         if (card.isCorrect && card.isSelected) {
@@ -149,6 +148,15 @@ fun FrontSide(
                 imageVector = Icons.Default.Star,
                 contentDescription = "Star Icon",
                 tint = Color.White
+            )
+        }
+        else {
+            // Has to be here otherwise the lazy grid won't draw it.
+            Text(
+                text = card.cardNumber.toString(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp,
+                color = card.color
             )
         }
     }
@@ -170,8 +178,8 @@ fun BackSide(
                 cameraDistance = 8 * density
             )
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.Gray)
-            .alpha(if (rotationY > 90f) 1f else 0f),
+            .background(Color.Gray),
+//            .alpha(if (rotationY > 90f) 1f else 0f),
         contentAlignment = Alignment.Center
     ) {
         Text(text = "?", fontWeight = FontWeight.Bold, fontSize = 32.sp)
