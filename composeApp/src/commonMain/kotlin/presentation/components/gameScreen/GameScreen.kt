@@ -49,12 +49,6 @@ fun GameScreen(
         )
     }
 
-//    AnimationBox(
-//        modifier = modifier.fillMaxSize(),
-//        gameState = gameState,
-//    )
-
-
     AnimatedVisibility(
         visible = gameState.gameWon,
         enter = fadeIn(),
@@ -81,19 +75,6 @@ fun GameScreen(
         )
     }
 
-    AnimatedVisibility(
-        visible = gameState.showingTutorialMessage,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ){
-        TutorialScreen(
-            modifier = modifier,
-            gameState = gameState,
-            onRestart = { onRestart() },
-            onReturnToMenu = { onReturnToMenu() },
-            dismissTutorial = { dismissTutorial() }
-        )
-    }
 }
 
 //@Composable
