@@ -12,6 +12,8 @@ data class GameState(
     val totalCards: Int = 0,
     val correctChoices: Int = 0,
 
+    val animatingCards: List<CardState> = listOf(),
+
     val consecutiveFails: Int = 0,
     val consecutiveMatches: Int = 0,
 
