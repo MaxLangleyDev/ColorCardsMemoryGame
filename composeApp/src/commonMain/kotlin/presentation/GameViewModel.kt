@@ -1,7 +1,6 @@
 package presentation
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.LayoutCoordinates
 import model.CardState
 import model.GameState
 import androidx.lifecycle.ViewModel
@@ -89,23 +88,6 @@ class GameViewModel(
             }
 
             delay(600) // Wait for game screen to appear
-
-            if (_gameState.value.tutorialMessageEnabled){
-
-                _gameState.update { gameState ->
-                    gameState.copy(
-                        showingTutorialMessage = true
-                    )
-                }
-
-                // Wait for tutorial message to be dismissed
-                while (_gameState.value.showingTutorialMessage){
-                    delay(33)
-                }
-
-            }
-
-            delay(300) // Wait for tutorial message to disappear
 
             flipAllCardsUp()
 
@@ -405,6 +387,7 @@ class GameViewModel(
                 showingGameScreen = false,
                 showingGameLostScreen = false,
                 showingGameWonScreen = false,
+                showingTutorialScreen = false,
             )
         }
     }
@@ -418,7 +401,6 @@ class GameViewModel(
                     showingGameLostScreen = false,
                     showingGameWonScreen = false,
                     showingTransitionScreen = true,
-                    tutorialMessageEnabled = false
                     )
             }
 
@@ -430,10 +412,18 @@ class GameViewModel(
         }
     }
 
+    fun showTutorial(){
+        _gameState.update { gameState ->
+            gameState.copy(
+                showingTutorialScreen = true
+            )
+        }
+    }
+
     fun dismissTutorial(){
         _gameState.update { gameState ->
             gameState.copy(
-                showingTutorialMessage = false
+                showingTutorialScreen = false
             )
         }
     }
