@@ -2,6 +2,7 @@ package presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import presentation.components.gameScreen.GameScreen
 import presentation.components.StartScreen
+import presentation.components.TutorialScreen
 
 @Composable
 fun GameContainer(){
@@ -32,7 +34,8 @@ fun GameContainer(){
             modifier = Modifier.fillMaxSize(),
             gameState = gameState,
             setupGame = viewModel::setupGame,
-            startGame = viewModel::startGame
+            startGame = viewModel::startGame,
+            showTutorial = viewModel::showTutorial
         )
     }
 
@@ -45,6 +48,20 @@ fun GameContainer(){
             modifier = Modifier.fillMaxSize(),
             gameState = gameState,
             onCardFlipped = viewModel::playerFlipCardUp,
+            onRestart = viewModel::restartGame,
+            onReturnToMenu = viewModel::returnToMenu,
+            dismissTutorial = viewModel::dismissTutorial
+        )
+    }
+
+    AnimatedVisibility(
+        visible = gameState.showingTutorialScreen,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ){
+        TutorialScreen(
+            modifier = Modifier.fillMaxSize(),
+            gameState = gameState,
             onRestart = viewModel::restartGame,
             onReturnToMenu = viewModel::returnToMenu,
             dismissTutorial = viewModel::dismissTutorial
