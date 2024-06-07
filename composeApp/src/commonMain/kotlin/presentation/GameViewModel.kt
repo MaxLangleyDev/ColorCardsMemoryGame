@@ -1,6 +1,7 @@
 package presentation
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.LayoutCoordinates
 import model.CardState
 import model.GameState
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,8 @@ class GameViewModel(
 
     private val _gameState = MutableStateFlow(initialGameState)
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
+
+
     fun setupGame(
         amountOfCards: Int,
     ) {
@@ -118,20 +121,49 @@ class GameViewModel(
 
     }
 
-    fun playerFlipCardUp(cardIndex: Int) {
+    fun playerFlipCardUp(
+        cardIndex: Int,
+        ) {
+
         val card = _gameState.value.cards[cardIndex]
 
         if (card.isSelectable && card.isFlippedDown){
 
-            val mutableCardsList = _gameState.value.cards.toMutableList()
+            val cardsList = _gameState.value.cards.toMutableList()
+            val animatingCardsList = _gameState.value.animatingCards.toMutableList()
 
-            mutableCardsList[cardIndex] =
+            cardsList[cardIndex] =
                 card.copy(
                     isFlippedDown = false,
-                    isSelected = true
+                    isSelected = true,
                 )
 
-            _gameState.value = _gameState.value.copy(cards = mutableCardsList)
+            _gameState.update { gameState ->
+                gameState.copy(
+                    cards = cardsList
+                )
+            }
+
+            _gameState.update { gameState ->
+                gameState.copy(
+                    animatingCards = animatingCardsList + _gameState.value.cards[cardIndex],
+                )
+            }
+
+
+            println(_gameState.value.animatingCards)
+
+            viewModelScope.launch {
+                delay(800)
+                _gameState.update { gameState ->
+                    gameState.copy(
+                        animatingCards = listOf(),
+                    )
+                }
+
+                println(_gameState.value.animatingCards)
+            }
+
 
             checkForMatchAndUpdate(card)
 
