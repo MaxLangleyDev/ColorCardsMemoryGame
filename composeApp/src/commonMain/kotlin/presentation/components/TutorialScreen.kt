@@ -95,9 +95,9 @@ fun TutorialScreen(
             Spacer(Modifier.height(8.dp))
 
 
-            Button(onClick = dismissTutorial ) {
-                Text(text = stringResource(Res.string.im_ready))
-            }
+//            Button(onClick = dismissTutorial ) {
+//                Text(text = stringResource(Res.string.im_ready))
+//            }
 
             Button(onClick = onReturnToMenu) {
                 Text(text = stringResource(Res.string.return_to_menu))
