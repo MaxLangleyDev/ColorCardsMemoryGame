@@ -12,5 +12,4 @@ data class CardState(
     val isCorrect: Boolean = false,
     val isSelectable: Boolean = false,
     val isSelected: Boolean = false,
-//    val coordinates: LayoutCoordinates? = null
 )
