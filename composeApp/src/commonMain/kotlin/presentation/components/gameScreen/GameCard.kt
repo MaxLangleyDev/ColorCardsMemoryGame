@@ -72,8 +72,8 @@ fun GameCard(
         animationSpec = tween(durationMillis = 600)
     )
 
-    val scale = animateFloatAsState(
-        targetValue = if (card.isCorrect && card.isSelected && rotationY != 0f) 1.2f else 1f,
+    val scale by animateFloatAsState(
+        targetValue = if (card.isCorrect && card.isSelected && rotationY != 0f) 1.4f else 1f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -94,7 +94,7 @@ fun GameCard(
             shakeCard = card.isSelected && card.isCorrect
             FrontSide(
                 card = card,
-                scale = scale.value,
+                scale = scale,
                 animatedBorderColor = animatedBorderColor,
                 rotationY = rotationY,
                 rotationZ = if (shakeCard && rotationY != 0f) rotationCoefficient.value * 30f else 0f,
