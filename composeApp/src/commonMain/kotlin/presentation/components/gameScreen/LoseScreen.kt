@@ -50,7 +50,7 @@ fun LoseScreen(
             modifier = Modifier
                 .wrapContentSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
