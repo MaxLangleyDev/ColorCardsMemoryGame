@@ -1,5 +1,12 @@
 package presentation.components.gameScreen
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,13 +21,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import model.GameState
+import kotlin.math.absoluteValue
 
 @Composable
 fun GameDetailsBar(
@@ -63,7 +78,7 @@ fun GameDetailsBar(
 
             Row(){
                 LinearProgressIndicator(
-                    progress = { gameState.pregameCountdown },
+                    progress = { gameState.pregameCountdownProgress },
                 )
             }
         }
@@ -108,9 +123,11 @@ fun GameDetailsBar(
             // Progress Bar
             Row(){
                 LinearProgressIndicator(
-                    progress = { gameState.gameCountdown },
+                    progress = { gameState.gameCountdownProgress },
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Points Row
             Row(){
@@ -128,10 +145,56 @@ fun GameDetailsBar(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.width(8.dp))
+
+                AnimatedPointsText(gameState = gameState)
             }
 
         }
 
     }
 
+}
+
+@Composable
+fun AnimatedPointsText(
+    modifier: Modifier = Modifier,
+    gameState: GameState = GameState()
+){
+
+    var targetValue by remember { mutableStateOf(0f) }
+
+    LaunchedEffect(gameState.lastPointsChange){
+        targetValue = 1f
+
+        delay(30)
+
+        targetValue = 0f
+    }
+
+    val alphaValue = animateFloatAsState(
+        targetValue = targetValue,
+        animationSpec = keyframes {
+            durationMillis = 1000
+            0f at 0
+            1f at 500
+            0f at 1000
+        }
+    )
+
+
+    Text(
+        modifier = Modifier.graphicsLayer(
+            alpha = alphaValue.value,
+            scaleX = 1 + (gameState.consecutiveMatches.toFloat() * 0.1f),
+            scaleY = 1 + (gameState.consecutiveMatches.toFloat() * 0.1f),
+        ),
+        text =
+        if (gameState.lastPointsChange > 0){" + " + gameState.lastPointsChange }
+        else if (gameState.lastPointsChange < 0){" - " + gameState.lastPointsChange.absoluteValue }
+        else "",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center
+    )
 }
