@@ -50,7 +50,6 @@ fun GameContainer(){
             onCardFlipped = viewModel::playerFlipCardUp,
             onRestart = viewModel::restartGame,
             onReturnToMenu = viewModel::returnToMenu,
-            dismissTutorial = viewModel::dismissTutorial
         )
     }
 
