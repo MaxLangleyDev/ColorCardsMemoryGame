@@ -19,13 +19,7 @@ class GameViewModel(
     private val _gameState = MutableStateFlow(initialGameState)
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
 
-    private val pregameTimerDuration = 3000L // 3 seconds
-    private val gameTimerDuration = 10000L // 10 seconds
-
-
-    fun setupGame(
-        amountOfCards: Int,
-    ) {
+    fun setupGame() {
         val cards = mutableListOf<CardState>()
         val colorsToFind = mutableListOf<Color>()
         val colors = _gameState.value.colors
@@ -33,7 +27,7 @@ class GameViewModel(
 
         var currentColorIndex = 0
 
-        repeat(amountOfCards) { index ->
+        repeat(_gameState.value.totalCards) { index ->
 
             val currentColor = colors[currentColorIndex]
             colorsToFind.add(currentColor)
@@ -55,7 +49,6 @@ class GameViewModel(
         _gameState.update { gameState ->
             gameState.copy(
                 cards = cards,
-                totalCards = amountOfCards,
                 correctChoices = 0,
                 targetColor = targetColor,
                 colorsToFind = colorsToFind,
@@ -64,8 +57,8 @@ class GameViewModel(
                 consecutiveFails = 0,
                 gameLost = false,
                 gameWon = false,
-                gameCountdown = 1f,
-                pregameCountdown = 1f,
+                gameCountdownProgress = 1f,
+                pregameCountdownProgress = 1f,
                 timedOut = false,
                 threeStrikes = false
             )
@@ -172,7 +165,7 @@ class GameViewModel(
 
     private fun pregameCountdown(){
 
-        val interval = pregameTimerDuration / 20
+        val interval = (_gameState.value.pregameCountdownDuration * 1000).toLong() / 20
 
         viewModelScope.launch {
 
@@ -180,7 +173,7 @@ class GameViewModel(
                 delay(interval)
                 _gameState.update { gameState ->
                     gameState.copy(
-                        pregameCountdown = gameState.pregameCountdown - 0.05f,
+                        pregameCountdownProgress = gameState.pregameCountdownProgress - 0.05f,
                     )
                 }
             }
@@ -190,7 +183,7 @@ class GameViewModel(
 
     private fun startGameTimer(){
 
-        val interval = gameTimerDuration / 20
+        val interval = (_gameState.value.gameCountdownDuration * 1000).toLong() / 20
 
         viewModelScope.launch {
 
@@ -211,7 +204,7 @@ class GameViewModel(
 
                 _gameState.update { gameState ->
                     gameState.copy(
-                        gameCountdown = gameState.gameCountdown - 0.05f,
+                        gameCountdownProgress = gameState.gameCountdownProgress - 0.05f,
                     )
                 }
 
@@ -221,12 +214,15 @@ class GameViewModel(
         }
     }
 
+
     private fun updateConsecutiveMatches(){
         val consecutiveMatches = _gameState.value.consecutiveMatches + 1
+        val pointsChange = 50 * consecutiveMatches
 
         _gameState.update { gameState ->
             gameState.copy(
-                points = gameState.points + (50 * consecutiveMatches),
+                points = gameState.points + pointsChange,
+                lastPointsChange = pointsChange,
                 consecutiveMatches = consecutiveMatches,
                 consecutiveFails = 0,
                 correctChoices = gameState.correctChoices + 1,
@@ -236,13 +232,15 @@ class GameViewModel(
 
     private fun updateConsecutiveFails(){
         val consecutiveFails = _gameState.value.consecutiveFails + 1
+        val pointsChange = 50 * consecutiveFails
 
         _gameState.update { gameState ->
             gameState.copy(
                 perfectGame = false,
                 consecutiveFails = consecutiveFails,
                 consecutiveMatches = 0,
-                points = gameState.points - (50 * consecutiveFails),
+                points = gameState.points - pointsChange,
+                lastPointsChange = -pointsChange
             )
         }
     }
@@ -397,7 +395,7 @@ class GameViewModel(
 
             delay(300)
 
-            setupGame(amountOfCards = 12)
+            setupGame()
 
             startGame()
         }
