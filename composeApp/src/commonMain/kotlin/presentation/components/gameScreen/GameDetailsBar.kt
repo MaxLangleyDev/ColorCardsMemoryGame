@@ -69,6 +69,7 @@ fun GameDetailsBar(
         }
         else if (gameState.gamePhase){
 
+            // Heading Text
             Row(
                 modifier = Modifier.fillMaxWidth().padding(4.dp),
                 horizontalArrangement = Arrangement.Center,
@@ -88,6 +89,7 @@ fun GameDetailsBar(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Time Remaining Text
             Row(
                 modifier = Modifier.fillMaxWidth().padding(4.dp),
                 horizontalArrangement = Arrangement.Center,
@@ -103,9 +105,28 @@ fun GameDetailsBar(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Progress Bar
             Row(){
                 LinearProgressIndicator(
                     progress = { gameState.gameCountdown },
+                )
+            }
+
+            // Points Row
+            Row(){
+                Text(
+                    text = "Points: ",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = gameState.points.toString(),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
