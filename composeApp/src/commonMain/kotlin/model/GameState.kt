@@ -9,10 +9,10 @@ data class GameState(
     val colorsToFind: List<Color> = listOf(),
     val targetColor: Color = Color(0x000000),
     val points: Int = 0,
-    val totalCards: Int = 0,
+    val lastPointsChange: Int = 0,
+    val totalCards: Int = 12,
     val correctChoices: Int = 0,
 
-//    val animatingCards: List<CardState> = listOf(),
     val currentCardIndex: Int = 0,
 
     val consecutiveFails: Int = 0,
@@ -26,6 +26,7 @@ data class GameState(
     val showingTutorialScreen: Boolean = false,
 
 
+    val setupPhase: Boolean = true,
     val pregamePhase: Boolean = false,
     val gamePhase: Boolean = false,
     val endPhase: Boolean = false,
@@ -36,10 +37,12 @@ data class GameState(
     val timedOut: Boolean = false,
     val perfectGame: Boolean = true,
 
-    var pregameCountdown: Float = 1f,
-    var gameCountdown: Float = 1f,
+    var pregameCountdownProgress: Float = 1f,
+    var gameCountdownProgress: Float = 1f,
 
-
+    // Settings
+    val pregameCountdownDuration: Int = 3,
+    val gameCountdownDuration: Int = 15,
 
     // Cheats
     val showColorOnBack: Boolean = true,
