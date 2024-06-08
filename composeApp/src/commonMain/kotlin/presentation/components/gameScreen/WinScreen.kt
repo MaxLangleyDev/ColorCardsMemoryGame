@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import colorcardsmemorygame.composeapp.generated.resources.Res
+import colorcardsmemorygame.composeapp.generated.resources.game_over
 import colorcardsmemorygame.composeapp.generated.resources.perfect_game
 import colorcardsmemorygame.composeapp.generated.resources.points
 import colorcardsmemorygame.composeapp.generated.resources.restart
@@ -42,12 +43,13 @@ fun WinScreen(
     onReturnToMenu: () -> Unit
 
 ){
+    val gameRatio = gameState.correctChoices/ gameState.totalCards
     Box(modifier = modifier, contentAlignment = Alignment.Center){
         Column(
             modifier = Modifier
                 .wrapContentSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -62,7 +64,10 @@ fun WinScreen(
                 )
             }
             else Text(
-                text = stringResource(Res.string.you_won),
+                text =
+                when (gameRatio) {
+                                 
+                                 },
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
                 textAlign = TextAlign.Center
