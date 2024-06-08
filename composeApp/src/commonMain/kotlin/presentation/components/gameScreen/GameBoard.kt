@@ -37,7 +37,7 @@ fun GameBoard(
                         width = (maxWidth / columns) - 8.dp,
                         height = (maxHeight / rows) - 8.dp
                     )
-                        .zIndex(if (gameState.animatingCards.contains(card)) 10f else 5f),
+                        .zIndex(if (index == gameState.currentCardIndex) 10f else 5f),
                     card = card,
                     showColorOnBack = gameState.showColorOnBack,
                     onFlipped = { onCardFlipped(index) },
