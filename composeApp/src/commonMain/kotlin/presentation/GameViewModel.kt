@@ -19,6 +19,9 @@ class GameViewModel(
     private val _gameState = MutableStateFlow(initialGameState)
     val gameState: StateFlow<GameState> = _gameState.asStateFlow()
 
+    private val pregameTimerDuration = 3000L // 3 seconds
+    private val gameTimerDuration = 10000L // 10 seconds
+
 
     fun setupGame(
         amountOfCards: Int,
@@ -112,7 +115,6 @@ class GameViewModel(
         if (card.isSelectable && card.isFlippedDown){
 
             val cardsList = _gameState.value.cards.toMutableList()
-            val animatingCardsList = _gameState.value.animatingCards.toMutableList()
 
             cardsList[cardIndex] =
                 card.copy(
@@ -122,30 +124,10 @@ class GameViewModel(
 
             _gameState.update { gameState ->
                 gameState.copy(
-                    cards = cardsList
+                    cards = cardsList,
+                    currentCardIndex = cardIndex
                 )
             }
-
-            _gameState.update { gameState ->
-                gameState.copy(
-                    animatingCards = animatingCardsList + _gameState.value.cards[cardIndex],
-                )
-            }
-
-
-            println(_gameState.value.animatingCards)
-
-            viewModelScope.launch {
-                delay(800)
-                _gameState.update { gameState ->
-                    gameState.copy(
-                        animatingCards = listOf(),
-                    )
-                }
-
-                println(_gameState.value.animatingCards)
-            }
-
 
             checkForMatchAndUpdate(card)
 
@@ -188,23 +170,28 @@ class GameViewModel(
 
     }
 
-    private fun pregameCountdown(seconds: Long = 3){
+    private fun pregameCountdown(){
 
-        val interval = (seconds * 1000) / 10
+        val interval = pregameTimerDuration / 20
+
         viewModelScope.launch {
-            for (i in 1..10) {
+
+            for (i in 1..20) {
                 delay(interval)
                 _gameState.update { gameState ->
                     gameState.copy(
-                        pregameCountdown = gameState.pregameCountdown - 0.1f,
+                        pregameCountdown = gameState.pregameCountdown - 0.05f,
                     )
                 }
             }
+
         }
     }
 
-    private fun startGameTimer(seconds: Long = 10){
-        val interval = (seconds * 1000) / 10
+    private fun startGameTimer(){
+
+        val interval = gameTimerDuration / 20
+
         viewModelScope.launch {
 
             _gameState.update { gameState ->
@@ -214,16 +201,20 @@ class GameViewModel(
                 )
             }
 
-            for (i in 1..10) {
+            for (i in 1..20) {
+
                 if (gameState.value.gameLost || gameState.value.gameWon){
                     break
                 }
+
                 delay(interval)
+
                 _gameState.update { gameState ->
                     gameState.copy(
-                        gameCountdown = gameState.gameCountdown - 0.1f,
+                        gameCountdown = gameState.gameCountdown - 0.05f,
                     )
                 }
+
             }
 
             if (!_gameState.value.gameWon) loseGame("timed_out")
