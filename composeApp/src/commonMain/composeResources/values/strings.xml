@@ -16,5 +16,10 @@
     <string name="tutorial_message3">At the top of the screen you will be presented with a color to locate.</string>"
     <string name="good_luck">Good luck!</string>"
     <string name="im_ready">I'm Ready!</string>
+    <string name="better_luck">Better luck next time!</string>
+    <string name="nice_work">Nice work!</string>
+    <string name="nice_try">Nice Try!</string>
+    <string name="well_done">Well Done!</string>
+    <string name="excellent_work">Excellent Work!</string>
 
 </resources>
