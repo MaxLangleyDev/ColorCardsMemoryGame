@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.stringResource
 fun StartScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
     gameState: GameState,
-    setupGame: (amountOfCards: Int) -> Unit = {},
+    setupGame: () -> Unit = {},
     startGame: () -> Unit = {},
     showTutorial: () -> Unit = {}
 ) {
@@ -36,7 +36,7 @@ fun StartScreen(
 
         Button(
             onClick = {
-                setupGame(12)
+                setupGame()
                 startGame()
             },
         ){
