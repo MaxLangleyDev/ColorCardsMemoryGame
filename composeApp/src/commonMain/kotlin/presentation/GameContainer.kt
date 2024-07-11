@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import presentation.components.SettingsScreen
 import presentation.components.gameScreen.GameScreen
 import presentation.components.StartScreen
 import presentation.components.TutorialScreen
@@ -35,7 +36,8 @@ fun GameContainer(){
             gameState = gameState,
             setupGame = viewModel::setupGame,
             startGame = viewModel::startGame,
-            showTutorial = viewModel::showTutorial
+            showTutorial = viewModel::showTutorial,
+            showSettings = viewModel::showSettings
         )
     }
 
@@ -64,6 +66,18 @@ fun GameContainer(){
             onRestart = viewModel::restartGame,
             onReturnToMenu = viewModel::returnToMenu,
             dismissTutorial = viewModel::dismissTutorial
+        )
+    }
+
+    AnimatedVisibility(
+        visible = gameState.showingSettingsScreen,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ){
+        SettingsScreen(
+            modifier = Modifier.fillMaxSize(),
+            gameState = gameState,
+            onDismissSettings = viewModel::dismissSettings
         )
     }
 
