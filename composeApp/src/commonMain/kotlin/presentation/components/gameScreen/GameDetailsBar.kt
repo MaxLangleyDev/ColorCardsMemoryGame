@@ -131,6 +131,7 @@ fun GameDetailsBar(
 
             // Points Row
             Row(){
+
                 Text(
                     text = "Points: ",
                     fontSize = 16.sp,
@@ -182,12 +183,21 @@ fun AnimatedPointsText(
         }
     )
 
+    val translationY = animateFloatAsState(
+        targetValue = if (targetValue == 1f) -200f else 0f,
+        animationSpec = tween(
+            durationMillis = 30,
+            easing = LinearEasing
+        )
+    )
+
 
     Text(
         modifier = Modifier.graphicsLayer(
             alpha = alphaValue.value,
-            scaleX = 1 + (gameState.consecutiveMatches.toFloat() * 0.1f),
-            scaleY = 1 + (gameState.consecutiveMatches.toFloat() * 0.1f),
+//            scaleX = 1 + (gameState.consecutiveMatches.toFloat() * 0.1f),
+//            scaleY = 1 + (gameState.consecutiveMatches.toFloat() * 0.1f),
+            translationY = translationY.value
         ),
         text =
         if (gameState.lastPointsChange > 0){" + " + gameState.lastPointsChange }
