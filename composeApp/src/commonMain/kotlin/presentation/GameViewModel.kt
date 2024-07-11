@@ -417,5 +417,21 @@ class GameViewModel(
         }
     }
 
+    fun showSettings(){
+        _gameState.update { gameState ->
+            gameState.copy(
+                showingSettingsScreen = true
+            )
+        }
+    }
+
+    fun dismissSettings(){
+        _gameState.update { gameState ->
+            gameState.copy(
+                showingSettingsScreen = false
+            )
+        }
+    }
+
 
 }
