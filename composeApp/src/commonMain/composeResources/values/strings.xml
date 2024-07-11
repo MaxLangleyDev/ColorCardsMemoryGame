@@ -21,5 +21,6 @@
     <string name="nice_try">Nice Try!</string>
     <string name="well_done">Well Done!</string>
     <string name="excellent_work">Excellent Work!</string>
+    <string name="settings">Settings</string>
 
 </resources>
