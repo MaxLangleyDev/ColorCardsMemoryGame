@@ -24,6 +24,7 @@ data class GameState(
     val showingGameLostScreen: Boolean = false,
     val showingGameWonScreen: Boolean = false,
     val showingTutorialScreen: Boolean = false,
+    val showingSettingsScreen: Boolean = false,
 
 
     val setupPhase: Boolean = true,
