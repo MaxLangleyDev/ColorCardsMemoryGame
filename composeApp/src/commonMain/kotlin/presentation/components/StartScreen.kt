@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import colorcardsmemorygame.composeapp.generated.resources.Res
+import colorcardsmemorygame.composeapp.generated.resources.settings
 import colorcardsmemorygame.composeapp.generated.resources.start_game
 import colorcardsmemorygame.composeapp.generated.resources.tutorial_title
 import model.GameState
@@ -26,7 +27,8 @@ fun StartScreen(
     gameState: GameState,
     setupGame: () -> Unit = {},
     startGame: () -> Unit = {},
-    showTutorial: () -> Unit = {}
+    showTutorial: () -> Unit = {},
+    showSettings: () -> Unit = {}
 ) {
     Column(
         modifier = modifier,
@@ -51,6 +53,16 @@ fun StartScreen(
             },
         ){
             Text(text = stringResource(Res.string.tutorial_title))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                showSettings()
+            },
+        ){
+            Text(text = stringResource(Res.string.settings))
         }
 
     }
