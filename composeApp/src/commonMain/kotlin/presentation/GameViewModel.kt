@@ -298,7 +298,7 @@ class GameViewModel(
         }
         else {
             updateConsecutiveFails()
-            if (_gameState.value.consecutiveFails >= 3){
+            if (_gameState.value.consecutiveFails >= 3 && _gameState.value.gameOverOnThreeStrikes){
                 loseGame("three_strikes")
             }
         }
