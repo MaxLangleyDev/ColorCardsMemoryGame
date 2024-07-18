@@ -89,7 +89,7 @@ class GameViewModel(
 
             pregameCountdown()
 
-            delay(3000) // Wait 3s before flipping all cards down (matches countdown)
+            delay((_gameState.value.pregameCountdownDuration * 1000).toLong()) // Delay before flipping all cards down (matches countdown)
 
             flipAllCardsDown(isSelectable = true)
 
