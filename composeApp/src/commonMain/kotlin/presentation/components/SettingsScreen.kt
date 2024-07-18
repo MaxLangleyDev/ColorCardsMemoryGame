@@ -70,6 +70,7 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Pregame Timer Duration
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -105,6 +106,45 @@ fun SettingsScreen(
                 }
             }
 
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Game Timer Duration
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Game Timer (Seconds): ")
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            var dropdownExpanded by remember { mutableStateOf(false) }
+
+            Column {
+
+                Text(
+                    modifier = Modifier.clickable{
+                        dropdownExpanded = !dropdownExpanded
+                    },
+                    text = gameState.gameCountdownDuration.toString()
+                )
+                DropdownMenu(
+                    expanded = dropdownExpanded,
+                    onDismissRequest = { dropdownExpanded = false }
+                ){
+                    for (i in 1..60) {
+                        DropdownMenuItem(
+                            text = {Text(text = i.toString())},
+                            onClick = {
+                                setGameCountdown(i)
+                                dropdownExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
 
         }
 
