@@ -77,7 +77,10 @@ fun GameContainer(){
         SettingsScreen(
             modifier = Modifier.fillMaxSize(),
             gameState = gameState,
-            onDismissSettings = viewModel::dismissSettings
+            onDismissSettings = viewModel::dismissSettings,
+            setPregameCountdown = viewModel::setPregameCountdownDuration,
+            setGameCountdown = viewModel::setGameCountdownDuration,
+            setGameOverOnThreeStrikes = viewModel::setGameOverOnThreeStrikes
         )
     }
 
