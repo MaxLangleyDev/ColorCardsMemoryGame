@@ -44,6 +44,7 @@ data class GameState(
     // Settings
     val pregameCountdownDuration: Int = 3,
     val gameCountdownDuration: Int = 15,
+    val gameOverOnThreeStrikes: Boolean = true,
 
     // Cheats
     val showColorOnBack: Boolean = true,
