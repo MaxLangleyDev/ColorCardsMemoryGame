@@ -1,6 +1,8 @@
 package presentation.components
 
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -65,22 +69,43 @@ fun SettingsScreen(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Three Strikes: ")
+            Text(text = "Initial Countdown (Seconds): ")
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            RadioButton(
-                selected = gameState.gameOverOnThreeStrikes,
-                onClick = {
-                    setGameOverOnThreeStrikes(!gameState.gameOverOnThreeStrikes)
+            var dropdownExpanded by remember { mutableStateOf(false) }
+
+            Column {
+
+                Text(
+                    modifier = Modifier.clickable{
+                        dropdownExpanded = !dropdownExpanded
+                    },
+                    text = gameState.pregameCountdownDuration.toString()
+                )
+                DropdownMenu(
+                    expanded = dropdownExpanded,
+                    onDismissRequest = { dropdownExpanded = false }
+                ){
+                    for (i in 1..60) {
+                        DropdownMenuItem(
+                            text = {Text(text = i.toString())},
+                            onClick = {
+                                setPregameCountdown(i)
+                                dropdownExpanded = false
+                            }
+                        )
+                    }
                 }
-            )
+            }
+
+
         }
 
         Spacer(modifier = Modifier.height(8.dp))
