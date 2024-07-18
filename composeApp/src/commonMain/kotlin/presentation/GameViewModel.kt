@@ -433,5 +433,33 @@ class GameViewModel(
         }
     }
 
+    fun setGameCountdownDuration(seconds: Int){
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                gameCountdownDuration = seconds
+            )
+        }
+
+    }
+
+    fun setPregameCountdownDuration(seconds: Int){
+
+        _gameState.update { gameState ->
+            gameState.copy(
+                pregameCountdownDuration = seconds
+            )
+        }
+
+    }
+
+    fun setGameOverOnThreeStrikes(boolean: Boolean){
+        _gameState.update { gameState ->
+            gameState.copy(
+                gameOverOnThreeStrikes = boolean
+            )
+        }
+    }
+
 
 }
