@@ -52,8 +52,7 @@ fun SettingsScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            var radioSelected by remember { mutableStateOf(false) }
-            Text(text = "Three Strikes = Game Over")
+            Text(text = "Three Strikes: ")
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -66,6 +65,27 @@ fun SettingsScreen(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+        
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Three Strikes: ")
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            RadioButton(
+                selected = gameState.gameOverOnThreeStrikes,
+                onClick = {
+                    setGameOverOnThreeStrikes(!gameState.gameOverOnThreeStrikes)
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+
 
         Button(onClick = onDismissSettings) {
             Text(text = stringResource(Res.string.return_to_menu))
