@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -18,7 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import colorcardsmemorygame.composeapp.generated.resources.Res
+import colorcardsmemorygame.composeapp.generated.resources.return_to_menu
 import model.GameState
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SettingsScreen(
@@ -49,13 +54,21 @@ fun SettingsScreen(
         ) {
             var radioSelected by remember { mutableStateOf(false) }
             Text(text = "Three Strikes = Game Over")
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             RadioButton(
-                selected = radioSelected,
+                selected = gameState.gameOverOnThreeStrikes,
                 onClick = {
-                    radioSelected = !radioSelected
-                    setGameOverOnThreeStrikes(radioSelected)
+                    setGameOverOnThreeStrikes(!gameState.gameOverOnThreeStrikes)
                 }
             )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(onClick = onDismissSettings) {
+            Text(text = stringResource(Res.string.return_to_menu))
         }
 
 
